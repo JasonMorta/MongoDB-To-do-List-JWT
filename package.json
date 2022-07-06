@@ -1,0 +1,22 @@
+{
+  "name": "mongodb-to-do-list-jwt",
+  "version": "1.0.0",
+  "description": "jwt backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JasonMorta/MongoDB-To-do-List-JWT.git"
+  },
+  "author": "JMorta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JasonMorta/MongoDB-To-do-List-JWT/issues"
+  },
+  "homepage": "https://github.com/JasonMorta/MongoDB-To-do-List-JWT#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
