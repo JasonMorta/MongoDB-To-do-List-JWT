@@ -15,9 +15,9 @@ schema.MongooseModel
 //Routes
 //All the endpoints the user connects to.
 require('./routes/findUser')(app);
-require('./routes/getList')(app);
-require('./routes/deleteItem')(app);
-require('./routes/addItem')(app);
+// require('./routes/getList')(app);
+// require('./routes/deleteItem')(app);
+// require('./routes/addItem')(app);
 
 
 
