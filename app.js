@@ -8,16 +8,9 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(bodyParser.json())
 
-//SCHEMA
-const schema = require('./models/car.model')
-schema.MongooseModel
 
-//Routes
-//All the endpoints the user connects to.
-require('./routes/findUser')(app);
-// require('./routes/getList')(app);
-// require('./routes/deleteItem')(app);
-// require('./routes/addItem')(app);
+
+
 
 
 
@@ -32,6 +25,55 @@ mongoose.connect("mongodb+srv://JMorta:testapp@mydatabase.6n2ggxn.mongodb.net/?r
       console.log("Not Connected to DB")
    }
 });
+
+
+
+
+const Schema={
+   id: String,
+   userName: String,
+   toDoList: [String],
+   created:Date,
+}
+const model=mongoose.model("JWT", Schema)
+
+
+
+
+app.get('/get',(req, res)=>{
+   model.find(({})),(err, data)=>{
+      res.send(data)
+   }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// //SCHEMA
+// const schema = require('./model/todolist.model')
+// schema.MongooseModel
+
+
+// //Routes
+// //All the endpoints the user connects to.
+// require('./routes/findUser')(app);
+// // require('./routes/getList')(app);
+// // require('./routes/deleteItem')(app);
+// // require('./routes/addItem')(app);
+
 
 
 //Listening on port 8080
