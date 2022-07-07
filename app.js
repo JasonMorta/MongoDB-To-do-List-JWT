@@ -161,8 +161,8 @@ app.post('/createUser', async(req,res)=>{
 //verifyJWT: verify if user has the correct Token when connection to endpoints
 //Also check if user is an Admin
 const verifyJWT = (req, res) => {
-   const token = req.headers['authorization'].split(' ')[1]//Bearer, takes care of extracting said token.
-
+   const usr = req.headers['authorization']//Bearer, takes care of extracting said token.
+   const token = usr.split(' ')[1]
    try {
    const decoded = jwt.verify(token, 'jwt-secret')
    res.send({
