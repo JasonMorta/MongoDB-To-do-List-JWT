@@ -34,8 +34,7 @@ export default function TodoList(props) {
         </div>
        
         ))}
-      
-         
+       
         
         </div>
       </Card.Text>

@@ -80,8 +80,6 @@ payload = {
 
 
 
-
-
 //POST= create the document on SING-UP
 //1. When A user signs in for the first time, a doc will be created,
 //the doc wil also have an empty toDoList
