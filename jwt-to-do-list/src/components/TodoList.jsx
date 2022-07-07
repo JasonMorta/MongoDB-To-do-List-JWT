@@ -7,9 +7,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 export default function TodoList(props) {
 
   
-    let myList = props.updatedToDOList.map(doc=>(
-      <li>{doc}</li>
-  ))
+    let myList = props.userToDOList.map(doc=>{
+     doc.toDoList.map(item=>(
+      <li>{item}</li>
+     ))
+     })
   
 
 

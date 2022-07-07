@@ -91,15 +91,18 @@ export default class App extends Component {
           //handle errors
         })
           .then((res) => res.json())
-          .then(( response) =>
+          .then(( response) =>{
           
            this.setState({
                 userToDOList: response,
                 updatedToDOList:response.toDoList,
               },()=>{
-                console.log(this.state.userToDOList)
+                
                 alert("Logged-IN")
               })
+              console.log(this.state.updatedToDOList)
+            
+            }
           )
           .catch((error) => console.log("Error:", error));
 
@@ -211,7 +214,7 @@ export default class App extends Component {
     
       
       this.setState({
-        updatedToDOList: response.toDoList,
+        userToDOList: response,//LAST EDIT
       },()=>{
         
         alert("Logged-IN")
