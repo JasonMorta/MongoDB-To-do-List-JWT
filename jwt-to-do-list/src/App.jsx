@@ -10,9 +10,7 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      // signUp: true, //if true, display sign-up window
-      // toDoWin: false,
-      // logIn: false,
+      userToDOList:{},
       loggedIn: false,
       nameValue: "",
       PassValue: "",
@@ -20,9 +18,12 @@ export default class App extends Component {
       requireNewPass: false,
       requireUserPass: '',
       requireUserName: '',
-      userToDOList:[],
+      updated: false,
+      userName: "",
+      userList:[],
+    
       thingToDOVal: "",
-      updatedToDOList:[],
+   
     };
   }
 
@@ -55,10 +56,10 @@ export default class App extends Component {
         
           this.setState({
               userToDOList: response,
-              updatedToDOList:response.toDoList,
+            
             },()=>{
-              console.log(this.state.userToDOList)
-              alert("Signed-UP")
+             
+             console.log(response)
             })
         )
         .catch((error) => console.log("Error:", error));
@@ -75,12 +76,6 @@ export default class App extends Component {
       sessionStorage.newUserN && 
       this.state.userPassInputValue ===
       sessionStorage.newUserP) {
-      this.setState({
-          loggedIn: true,
-          userToDOList: [],
-    
-        });
-
         //Find user data in db
          fetch('/findUser', {
           method: "POST",
@@ -94,20 +89,23 @@ export default class App extends Component {
           .then(( response) =>{
           
            this.setState({
-                userToDOList: response,
-                updatedToDOList:response.toDoList,
+            loggedIn: true,
+
+            userName: response[0].userName,
+            userList:response[0].toDoList,
+              
               },()=>{
-                
-                alert("Logged-IN")
+                console.log("Logged-IN")
+                console.log(this.state.userList)
               })
-              console.log(this.state.updatedToDOList)
+           
             
             }
           )
           .catch((error) => console.log("Error:", error));
 
     } else{
-      alert("Please enter corrent unername & password")
+      alert("Please enter correct username & password")
   
   }
   }
@@ -121,6 +119,8 @@ export default class App extends Component {
       PassValue: '',
       userPassInputValue: "",
       userNameInputValue: "",
+      userToDOList: [],
+    
     },()=>{
     });
     
@@ -189,14 +189,15 @@ export default class App extends Component {
   thingToDOInput=(e)=>{
     this.setState({
       thingToDOVal: e.target.value,
-    },()=>{
-      console.log(this.state.thingToDOVal)
     })
   }
 
-  //Add New Item to LIST
+  //ADD New Item to LIST
   addToList=(e)=>{
-    console.log(this.state.userNameInputValue)
+   this.setState({
+    userToDOList: [],
+    localList:this.state.thingToDOVal,
+   })
      //UPDATE Button inside itemMenuUI
     //This update the selected item with new values
     fetch("/update", {
@@ -204,23 +205,25 @@ export default class App extends Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userName: this.state.userNameInputValue,
-        toDoList: this.state.thingToDO,
-       
-      }),
-      //handle errors
-    })
-      .then((res) => res.json())
-      .then((response) =>
-    
-      
-      this.setState({
-        userToDOList: response,//LAST EDIT
-      },()=>{
-        
-        alert("Logged-IN")
+        toDoList: this.state.thingToDOVal,
       })
-      )
-      .catch((error) => console.log("Error:", error));
+
+    })
+    .then((res) => res.json())
+    .then(( response) =>{
+     this.setState({
+      userList:response.toDoList,
+      })
+      console.log("Added "+this.state.userList)
+      })
+    .catch((error) => console.log("Error:", error));
+
+    
+  }
+
+  //DELETE item from list
+  deleteItem=(e)=>{
+    console.log("deleted")
   }
 
   render() {
@@ -238,24 +241,28 @@ export default class App extends Component {
             />
        
 
-         
+      
             <TodoList 
-              updatedToDOList={this.state.updatedToDOList}
+            userList={this.state.userList}
+            userName={this.state.userName}
               thingToDOInput={this.thingToDOInput.bind(this)}
               thingToDOVal={this.state.thingToDOVal}
               addToList={this.addToList.bind(this)}
-              userToDOList={this.state.userToDOList}
+              deleteItem={this.deleteItem.bind(this)}
               logOut={this.logOut.bind(this)} />
-         
+   
 
          
+           
             <LogIn 
+           
               logIn={this.logIn.bind(this)}
               userNameInput={this.userNameInput.bind(this)}
               userNameInputValue={this.state.userNameInputValue}
               userPassInput={this.userPassInput.bind(this)}
               userPassInputValue={this.state.userPassInputValue}
               createAcc={this.createAcc.bind(this)} />
+            
           
         </section>
       </div>

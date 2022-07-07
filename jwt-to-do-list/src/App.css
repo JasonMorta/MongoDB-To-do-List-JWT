@@ -86,3 +86,49 @@
   right: 0;
   margin-left: 29px;
 }
+
+.item-cont {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: 1s;
+  border-top-left-radius: 20px;
+
+  border-bottom-left-radius: 20px;
+}
+
+.item-text{
+  display: flex;
+  margin: 0;
+  position: relative;
+  vertical-align: middle;
+  align-items: center;
+  flex-direction: row;
+
+}
+.item-cont:hover {
+  border-top-left-radius: 20px;
+  background-color: #9272ca69;
+  border-bottom-left-radius: 20px;
+  transition: .2s;
+  padding: 4px 0px 4px 4px;
+  font-size: smaller;
+}
+
+.item-text::before{
+  content: "◍";
+  position: relative;
+  width: 18px;
+  font-size: small;
+  vertical-align: middle;
+}
+
+.trash-icon {
+transition: .1s;
+}
+
+.trash-icon:hover {
+  transition: .1s;
+  transform: translate(0px, -5px) scale(1.2);
+  cursor: pointer;
+}

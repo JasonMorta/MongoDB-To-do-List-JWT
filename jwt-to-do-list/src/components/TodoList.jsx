@@ -3,30 +3,38 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import trash from '../img/trash.png'
 
 export default function TodoList(props) {
 
-  
-    let myList = props.userToDOList.map(doc=>{
-     doc.toDoList.map(item=>(
-      <li>{item}</li>
-     ))
-     })
-  
+
 
 
   return (
     <div className='to-do-container'>      
       <Card border="info" style={{ borderColor: "firebrick" }}>
     <Card.Header style={{position: "relative"}}>
-      {props.userToDOList.map(name=>(name.userName))} TO DO LIST 
+    {props.userName} TO DO LIST 
     
     </Card.Header>
     <Card.Body>
       <Card.Title>Things to do</Card.Title>
       <Card.Text>
         <div className='user-list'>
-          <ul>{myList}</ul>
+         
+        {props.userList.map(doc=>
+        (
+        <div className="item-cont">
+            <p className="item-text">{doc}</p>
+            <img src={trash} 
+            alt="trash" 
+            className="trash-icon"
+            onClick={props.deleteItem}/>
+        </div>
+       
+        ))}
+      
+         
         
         </div>
       </Card.Text>
