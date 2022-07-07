@@ -29,6 +29,7 @@ export default function TodoList(props) {
             <img src={trash} 
             alt="trash" 
             className="trash-icon"
+            data-listItem={doc}
             onClick={props.deleteItem}/>
         </div>
        

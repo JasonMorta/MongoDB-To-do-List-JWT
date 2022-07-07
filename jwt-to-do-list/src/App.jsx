@@ -21,7 +21,7 @@ export default class App extends Component {
       updated: false,
       userName: "",
       userList:[],
-    
+      deleted: false, 
       thingToDOVal: "",
    
     };
@@ -48,6 +48,7 @@ export default class App extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userName: this.state.nameValue,
+          userPass: this.state.PassValue
         }),
         //handle errors
       })
@@ -63,7 +64,6 @@ export default class App extends Component {
             })
         )
         .catch((error) => console.log("Error:", error));
-       
     };
 
 
@@ -82,6 +82,7 @@ export default class App extends Component {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userName: this.state.userNameInputValue,
+            userPass: this.state.userPassInputValue
           }),
           //handle errors
         })
@@ -96,7 +97,8 @@ export default class App extends Component {
               
               },()=>{
                 console.log("Logged-IN")
-                console.log(this.state.userList)
+                console.log("Username; " + this.state.userNameInputValue)
+                console.log("Pass; " + this.state.userPassInputValue)
               })
            
             
@@ -197,8 +199,8 @@ export default class App extends Component {
    this.setState({
     userToDOList: [],
     localList:this.state.thingToDOVal,
-   })
-     //UPDATE Button inside itemMenuUI
+   },()=>{
+         //UPDATE Button inside itemMenuUI
     //This update the selected item with new values
     fetch("/update", {
       method: "PUT",
@@ -213,17 +215,53 @@ export default class App extends Component {
     .then(( response) =>{
      this.setState({
       userList:response.toDoList,
+  
       })
       console.log("Added "+this.state.userList)
+
       })
     .catch((error) => console.log("Error:", error));
+   })
+
 
     
   }
 
   //DELETE item from list
   deleteItem=(e)=>{
-    console.log("deleted")
+
+this.setState({
+  toDoItem:e.target.dataset.listitem,
+  
+},()=>{
+      fetch("/remove", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userName: this.state.userName,
+        toDoList: this.state.toDoItem,
+      
+      }),
+      //handle errors
+    })
+      .then((res) => res.json())
+      .then((response) =>(
+          this.setState({
+           deleted: !this.state.deleted,
+          },()=>{
+            this.setState({
+              userList:response.toDoList
+            })
+            console.log(this.state.userList)
+          })
+  
+      ))
+      .catch((error) => console.log("Error:", error));
+  console.log(this.state.toDoItem)
+})
+
+
+      
   }
 
   render() {

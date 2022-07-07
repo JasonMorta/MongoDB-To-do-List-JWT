@@ -8,6 +8,7 @@ app.use(bodyParser.urlencoded({
    extended: false
 }))
 app.use(bodyParser.json())
+const jwt = require('jsonwebtoken')
 
 
 
@@ -33,6 +34,7 @@ mongoose.connect("mongodb+srv://JMorta:testapp@mydatabase.6n2ggxn.mongodb.net/?r
 const Schema={
    id: String,
    userName: String,
+   userPass: String,
    toDoList: [String],
    created:Date,
 }
@@ -43,8 +45,20 @@ const model=mongoose.model("ToDoLists", Schema)
 
 app.post('/findUser', (req,res)=>{
 
+   
+payload = {
+   'name': req.body.userName,
+   'admin': false
+   }
+   const token = jwt.sign(JSON.stringify(payload), 'my-secret',
+   {algorithm: 'HS256'})
+   res.send({'token': token})
+
+
+
    model.find(({
-      userName:req.body.userName
+      userName:req.body.userName ,
+      userPass:req.body.userPass
    }), (err, data) => {
 
       if (err) {
@@ -57,7 +71,7 @@ app.post('/findUser', (req,res)=>{
             res.send("User Not Found");
          } else {
             res.send(data);
-            console.log("logged-in")
+            console.log(data)
 
          }
       }
@@ -65,7 +79,7 @@ app.post('/findUser', (req,res)=>{
    })
 
 
-g
+
 
 
 //POST= create the document on SING-UP
@@ -74,6 +88,8 @@ g
 app.post('/createUser', async(req,res)=>{
    const data=new model({
       userName:req.body.userName,
+      userPass:req.body.userPass
+
    });
    const value = await data.save();
    res.json(value); //send the same data back 
@@ -119,11 +135,11 @@ app.delete('/remove', (req,res)=>{
    //2. Pull the query item from the toDoList.
    
       model.findOneAndUpdate({
-         userName: req.query.userName
+         userName: req.body.userName
       }, 
       {
          $pull: {
-            toDoList: req.query.toDoList,
+            toDoList: req.body.toDoList,
          }
       },
    
