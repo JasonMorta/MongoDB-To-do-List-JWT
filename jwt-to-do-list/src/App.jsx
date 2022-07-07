@@ -10,9 +10,10 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      signUp: true, //if true, display sign-up window
-      toDoWin: false,
-      logIn: false,
+      // signUp: true, //if true, display sign-up window
+      // toDoWin: false,
+      // logIn: false,
+      loggedIn: false,
       nameValue: "",
       PassValue: "",
       requireNewName: false,
@@ -20,45 +21,52 @@ export default class App extends Component {
       requireUserPass: '',
       requireUserName: '',
       userToDOList:[],
+      thingToDOVal: "",
+      updatedToDOList:[],
     };
   }
 
   //SIGN-UP Button
   addUser = (e) => {
-    // if (!this.state.requireNewPass || !this.state.requireNewName) {
-    //   alert("Please enter a User name and Password");
-    // } else {
-    //   //save password to sessionStorage
-    //   sessionStorage.newUserP = this.state.PassValue;
-    //   sessionStorage.newUserN = this.state.nameValue;
-    //   // alert("welcome "+sessionStorage.newUserN)
-    //   this.setState({
-    //     signUp: false, //if true, display sign-up window
-    //     toDoWin: true,
-    //     logIn: false,
-    //   });
+      if (!this.state.requireNewPass || !this.state.requireNewName) {
+        alert("Please enter a User name and Password");
+      } else {
+        //save password to sessionStorage
+        sessionStorage.newUserP = this.state.PassValue;
+        sessionStorage.newUserN = this.state.nameValue;
+        // alert("welcome "+sessionStorage.newUserN)
+        this.setState({
+          signUp: false, //if true, display sign-up window
+          toDoWin: true,
+          logIn: false,
+        });
 
-    // }
+        //Add new user to db
+      fetch('/createUser', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userName: this.state.nameValue,
+        }),
+        //handle errors
+      })
+        .then((res) => res.json())
+        .then((response) =>
+        
+          this.setState({
+              userToDOList: response,
+              updatedToDOList:response.toDoList,
+            },()=>{
+              console.log(this.state.userToDOList)
+              alert("Signed-UP")
+            })
+        )
+        .catch((error) => console.log("Error:", error));
+       
+    };
 
-console.log( this.state.nameValue)
-    fetch('/createUser', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userName: "newUser",
-      }),
-      //handle errors
-    })
-      // .then((res) => res.json())
-      // .then((response) =>{}
-      
-      //   // this.setState(
-      //   //   {
-      //   //     userToDOList: response,
-      //   //   })
-      // )
-      // .catch((error) => console.log("Error:", error));
-  };
+
+  }
 
   //LOG-IN
   logIn=(e)=>{
@@ -67,19 +75,33 @@ console.log( this.state.nameValue)
       sessionStorage.newUserN && 
       this.state.userPassInputValue ===
       sessionStorage.newUserP) {
-        this.setState({
-          toDoWin: true,
-          logIn: false,
-          signUp: false,
-          userPassInputValue: "",
-          userNameInputValue: "",
+      this.setState({
+          loggedIn: true,
+          userToDOList: [],
     
         });
 
-
-
-
-
+        //Find user data in db
+         fetch('/findUser', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userName: this.state.userNameInputValue,
+          }),
+          //handle errors
+        })
+          .then((res) => res.json())
+          .then(( response) =>
+          
+           this.setState({
+                userToDOList: response,
+                updatedToDOList:response.toDoList,
+              },()=>{
+                console.log(this.state.userToDOList)
+                alert("Logged-IN")
+              })
+          )
+          .catch((error) => console.log("Error:", error));
 
     } else{
       alert("Please enter corrent unername & password")
@@ -91,11 +113,11 @@ console.log( this.state.nameValue)
   //LOG-OUT button
   logOut = (e) => {
     this.setState({
-      toDoWin: false,
-      logIn: true,
-      signUp: false,
+      loggedIn: false,
       nameValue: '',
       PassValue: '',
+      userPassInputValue: "",
+      userNameInputValue: "",
     },()=>{
     });
     
@@ -139,13 +161,15 @@ console.log( this.state.nameValue)
 
   //UserName input
   userNameInput=(e)=>{
-    console.log(e.target.value)
+    
     this.setState({
       requireUserName: e.target.required,
       userNameInputValue: e.target.value,
 
+    },()=>{
+      console.log(this.state.userNameInputValue)
     });
-    console.log(this.state.userNameInputValue)
+   
   }
 
   //userPass input
@@ -158,11 +182,49 @@ console.log( this.state.nameValue)
     console.log(this.state.userPassInputValue)
   }
 
+//thing to do list Input
+  thingToDOInput=(e)=>{
+    this.setState({
+      thingToDOVal: e.target.value,
+    },()=>{
+      console.log(this.state.thingToDOVal)
+    })
+  }
+
+  //Add New Item to LIST
+  addToList=(e)=>{
+    console.log(this.state.userNameInputValue)
+     //UPDATE Button inside itemMenuUI
+    //This update the selected item with new values
+    fetch("/update", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userName: this.state.userNameInputValue,
+        toDoList: this.state.thingToDO,
+       
+      }),
+      //handle errors
+    })
+      .then((res) => res.json())
+      .then((response) =>
+    
+      
+      this.setState({
+        updatedToDOList: response.toDoList,
+      },()=>{
+        
+        alert("Logged-IN")
+      })
+      )
+      .catch((error) => console.log("Error:", error));
+  }
+
   render() {
     return (
       <div className="App">
         <section className="App-section">
-          {this.state.signUp ? (
+          
             <SignUp
             switchToLI={this.switchToLI.bind(this)}
               addUser={this.addUser.bind(this)}
@@ -171,17 +233,19 @@ console.log( this.state.nameValue)
               newPassInput={this.newPassInput.bind(this)}
               PassValue={this.state.PassValue}
             />
-          ) : (
-            <></>
-          )}
+       
 
-          {this.state.toDoWin ? (
-            <TodoList logOut={this.logOut.bind(this)} />
-          ) : (
-            <></>
-          )}
+         
+            <TodoList 
+              updatedToDOList={this.state.updatedToDOList}
+              thingToDOInput={this.thingToDOInput.bind(this)}
+              thingToDOVal={this.state.thingToDOVal}
+              addToList={this.addToList.bind(this)}
+              userToDOList={this.state.userToDOList}
+              logOut={this.logOut.bind(this)} />
+         
 
-          {this.state.logIn ? (
+         
             <LogIn 
               logIn={this.logIn.bind(this)}
               userNameInput={this.userNameInput.bind(this)}
@@ -189,9 +253,7 @@ console.log( this.state.nameValue)
               userPassInput={this.userPassInput.bind(this)}
               userPassInputValue={this.state.userPassInputValue}
               createAcc={this.createAcc.bind(this)} />
-          ) : (
-            <></>
-          )}
+          
         </section>
       </div>
     );
