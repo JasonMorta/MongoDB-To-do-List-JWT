@@ -41,10 +41,10 @@ const model=mongoose.model("ToDoLists", Schema)
 //On LOG-IN get the user todoList
 //1. FIND the List by userName
 
-app.get('/findUser', (req,res)=>{
+app.post('/findUser', (req,res)=>{
 
    model.find(({
-      userName:req.query.userName
+      userName:req.body.userName
    }), (err, data) => {
 
       if (err) {
@@ -57,6 +57,7 @@ app.get('/findUser', (req,res)=>{
             res.send("User Not Found");
          } else {
             res.send(data);
+            console.log("logged-in")
 
          }
       }
@@ -83,19 +84,14 @@ app.post('/createUser', async(req,res)=>{
 
 //ADD TO LIST
 //PUSH = find the user doc and add more items to the toDoList array
-app.put('/update', (req,res)=>{
+app.put('/update', async(req,res)=>{
 
 //1.Find the doc by userName
 //2. Push the new item to the toDoList. if toDoList, does not exist, one will be created.
 
-   model.findOneAndUpdate({
-      userName: req.query.userName
-   }, //update/?id=idNumber
-   {
-      $push: {
-         toDoList: req.query.toDoList,
-      }
-   },
+   model.findOneAndUpdate(
+   {userName: req.body.userName},//find user by userName 
+   {$addToSet:{toDoList: req.body.toDoList}},
 
    {
       new: true
@@ -109,6 +105,7 @@ app.put('/update', (req,res)=>{
             res.send("not Data Found");
          } else {
             res.send(data)
+            console.log("item Added")
          }
       }
    })
