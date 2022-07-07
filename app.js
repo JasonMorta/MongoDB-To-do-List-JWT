@@ -65,7 +65,7 @@ app.post('/findUser', (req,res)=>{
    })
 
 
-
+g
 
 
 //POST= create the document on SING-UP
