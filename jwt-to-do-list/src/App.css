@@ -68,6 +68,7 @@
 
 .logIn-container {
   min-width: 320px;
+  position: relative;
     border: 3px solid firebrick;
     border-radius: 8px 8px;
     background-color: #27262b;
@@ -77,4 +78,11 @@
 
 .password {
   -webkit-text-security: square;
+}
+
+.newUser {
+  position: relative;
+  top: 0;
+  right: 0;
+  margin-left: 29px;
 }

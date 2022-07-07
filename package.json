@@ -1,8 +1,8 @@
 {
-  "name": "mongodb-to-do-list-jwt",
+  "name": "jwt-to-do-list",
   "version": "1.0.0",
   "description": "jwt backend",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"
@@ -21,6 +21,7 @@
     "body-parser": "^1.20.0",
     "concurrently": "^7.2.2",
     "express": "^4.18.1",
+    "isomorphic-fetch": "^3.0.0",
     "mongoose": "^6.4.3",
     "nodemon": "^2.0.19",
     "routes": "^2.1.0"

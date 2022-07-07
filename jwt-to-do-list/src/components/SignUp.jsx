@@ -3,37 +3,39 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 
-export default function LogIn(props) {
+export default function SignUp(props) {
+  //This component will create a user Account
   return (
     <div className="logIn-container">
-      <h2 style={{color: "white", marginBottom: "1.25rem"}}>Log-In</h2>
+      <h2 style={{color: "white", marginBottom: "1.25rem"}}>Sign-Up</h2>
       <InputGroup className="mb-3">
         <Form.Control
-        required="true"
+          required="true"
           placeholder="User name"
-          onInput={props.userNameInput}
+          onInput={props.newNameInput}
           aria-describedby="basic-addon2"
-          defaultValue={props.userNameInputValue}
+          defaultValue={props.nameValue}
         />
       </InputGroup>
       <InputGroup className="mb-3 password" >
         <Form.Control
-        required="true"
-          onInput={props.userPassInput}
+          required="true"
+          onInput={props.newPassInput}
           placeholder="Password"
           aria-describedby="basic-addon2"
-          defaultValue={props.userPassInputValue}
+          defaultValue={props.PassValue}
         />
       </InputGroup>
       <Button 
-        onClick={props.logIn}
+        onClick={props.addUser}
         variant="outline-secondary" id="button-addon2">
-        Log in
+        Sign Up
       </Button>
-      <Button className="newUser" 
-        onClick={props.createAcc}
+      <br/>
+      <Button 
+        onClick={props.switchToLI}
         variant="outline-secondary" id="button-addon2">
-        Create Account
+        Log-In
       </Button>
     </div>
   );

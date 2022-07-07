@@ -1,4 +1,5 @@
 const express = require("express");
+require('isomorphic-fetch');
 const app = express();
 app.use(express.json());
 const mongoose = require("mongoose");
@@ -35,18 +36,116 @@ const Schema={
    toDoList: [String],
    created:Date,
 }
-const model=mongoose.model("JWT", Schema)
+const model=mongoose.model("ToDoLists", Schema)
+
+//On LOG-IN get the user todoList
+//1. FIND the List by userName
+
+app.get('/findUser', (req,res)=>{
+
+   model.find(({
+      userName:req.query.userName
+   }), (err, data) => {
+
+      if (err) {
+         console.log(err);
+         res.status(500).send({
+            message: "Some error occurred while retrieving data."
+         });
+      } else {
+         if (data.length == 0) {
+            res.send("User Not Found");
+         } else {
+            res.send(data);
+
+         }
+      }
+   });
+   })
 
 
 
 
-app.get('/get',(req, res)=>{
-   model.find(({})),(err, data)=>{
-      res.send(data)
-   }
+
+//POST= create the document on SING-UP
+//1. When A user signs in for the first time, a doc will be created,
+//the doc wil also have an empty toDoList
+app.post('/createUser', async(req,res)=>{
+   const data=new model({
+      userName:req.body.userName,
+   });
+   const value = await data.save();
+   res.json(value); //send the same data back 
+   console.log("New user Added");
 })
 
 
+
+//ADD TO LIST
+//PUSH = find the user doc and add more items to the toDoList array
+app.put('/update', (req,res)=>{
+
+//1.Find the doc by userName
+//2. Push the new item to the toDoList. if toDoList, does not exist, one will be created.
+
+   model.findOneAndUpdate({
+      userName: req.query.userName
+   }, //update/?id=idNumber
+   {
+      $push: {
+         toDoList: req.query.toDoList,
+      }
+   },
+
+   {
+      new: true
+   }, //return new updated data. if false: return old data but still updates.
+
+   (err, data) => {
+      if (err) {
+         console.log(err)
+      } else {
+         if (data == null) {
+            res.send("not Data Found");
+         } else {
+            res.send(data)
+         }
+      }
+   })
+})
+
+
+//DELETE item from ToDoList
+app.delete('/remove', (req,res)=>{
+
+   //1.Find the doc by userName
+   //2. Pull the query item from the toDoList.
+   
+      model.findOneAndUpdate({
+         userName: req.query.userName
+      }, 
+      {
+         $pull: {
+            toDoList: req.query.toDoList,
+         }
+      },
+   
+      {
+         new: true
+      }, //return new updated data. if false: return old data but still updates.
+   
+      (err, data) => {
+         if (err) {
+            console.log(err)
+         } else {
+            if (data == null) {
+               res.send("not Data Found");
+            } else {
+               res.send(data)
+            }
+         }
+      })
+   })
 
 
 

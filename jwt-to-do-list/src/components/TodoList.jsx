@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 
-export default function TodoList() {
+export default function TodoList(props) {
   return (
     <div className='to-do-container'>      
       <Card border="info" style={{ borderColor: "firebrick" }}>
@@ -32,7 +32,10 @@ export default function TodoList() {
         </Button>
         
       </InputGroup>
-      <Button variant="danger" className='logOut-btn'>Log Out</Button>
+      <Button 
+      onClick={props.logOut}
+      variant="danger" 
+      className='logOut-btn'>Log Out</Button>
   </div>
   )
 }
