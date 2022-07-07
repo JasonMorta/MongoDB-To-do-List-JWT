@@ -71,12 +71,11 @@ export default class App extends Component {
 
   
   //LOG-IN
+  //On log-in store JWT token to localStorage
   logIn=(e)=>{
     if (
-      this.state.userNameInputValue === 
-      sessionStorage.newUserN && 
-      this.state.userPassInputValue ===
-      sessionStorage.newUserP) {
+      this.state.userNameInputValue && 
+      this.state.userPassInputValue) {
         //Find user data in db
          fetch('/findUser', {
           method: "POST",
@@ -88,18 +87,18 @@ export default class App extends Component {
           //handle errors
         })
           .then((res) => res.json())
-          .then(( response) =>{
-          
+          .then((response) =>{
+            localStorage.setItem("token", response[0].userToken)
            this.setState({
             loggedIn: true,
-
             userName: response[0].userName,
             userList:response[0].toDoList,
+        
               
               },()=>{
                 console.log("Logged-IN")
-                console.log("Username; " + this.state.userNameInputValue)
-                console.log("Pass; " + this.state.userPassInputValue)
+    
+                console.log(this.state.userToken)
               })
            
             
@@ -229,6 +228,7 @@ export default class App extends Component {
   }
 
   //DELETE item from list
+  //User JWT token to authenticate user on the backend. if pass, server will respond to request
   deleteItem=(e)=>{
 
 this.setState({
@@ -237,7 +237,10 @@ this.setState({
 },()=>{
       fetch("/remove", {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json", 
+        "authorization":  localStorage.getItem("token")
+      },
       body: JSON.stringify({
         userName: this.state.userName,
         toDoList: this.state.toDoItem,
@@ -246,17 +249,18 @@ this.setState({
       //handle errors
     })
       .then((res) => res.json())
-      .then((response) =>(
-          this.setState({
-           deleted: !this.state.deleted,
-          },()=>{
-            this.setState({
-              userList:response.toDoList
-            })
-            console.log(this.state.userList)
-          })
+      .then((response) => {
+        console.log(response)
+          // this.setState({
+          //  deleted: !this.state.deleted,
+          // },()=>{
+          //   this.setState({
+          //     userList:response.toDoList
+          //   })
+          //   console.log(this.state.userList)
+          // })
   
-      ))
+      })
       .catch((error) => console.log("Error:", error));
   console.log(this.state.toDoItem)
 })
