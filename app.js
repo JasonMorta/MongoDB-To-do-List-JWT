@@ -107,12 +107,61 @@ const model=mongoose.model("ToDoLists", Schema)
       // })
 
 
+
+//POST= create the document on SIGN-UP
+//1. When A user signs in for the first time, a doc will be created,
+//2. The doc wil also have an empty toDoList
+//3. This doc will also store the user Name/password & token
+app.post('/createUser', async(req,res)=>{
+   
+   //set user privileges and payload
+   payload = {
+      'name': req.body.userName,
+      'admin': false
+   }
+   const token = jwt.sign(JSON.stringify(payload), 'jwt-secret', {
+      algorithm: 'HS256'
+   })
+   const data=new model({
+      userName:req.body.userName,
+      userToken: token
+   });
+   const value = await data.save();
+   res.json(value); //send the same data back 
+   console.log("New user Added");
+})
+
+
+
+
+//verifyJWT: verify if user has the correct Token when connection to endpoints
+//Also check if user is an Admin
+const veriJWT = (req, res, next) => {
+   const usr = req.headers['authorization']//Bearer, takes care of extracting said token.
+   const token = usr.split(' ')[1]
+   if(token){
+   const decoded = jwt.verify(token, 'jwt-secret')
+   
+   console.log(
+      {
+         'msg':`Hello, ${decoded.name}! Your JSON Web Token has been verified.`,
+         'Admin': `${decoded.admin}`
+      })
+  
+   } else {
+   res.status(401).send({'err': 'Bad JWT!'})
+ 
+   }
+   next();
+}
+
+
+
 //On LOG-IN get the user todoList
 //1. FIND the List by userName
-app.post('/findUser', (req,res)=>{
+app.post('/findUser', veriJWT, (req,res)=>{
    model.find(({
       userName:req.body.userName,
-      userPass:req.body.userPass
    }), (err, data) => {
 
       if (err) {
@@ -135,55 +184,18 @@ app.post('/findUser', (req,res)=>{
    });
    })
 
-//POST= create the document on SING-UP
-//1. When A user signs in for the first time, a doc will be created,
-//2. The doc wil also have an empty toDoList
-//3. This doc will also store the user Name/password & token
-app.post('/createUser', async(req,res)=>{
-   
-   //set user pillages
-   payload = {
-      'name': req.body.userName,
-      'admin': false
-   }
-   const token = jwt.sign(JSON.stringify(payload), 'jwt-secret', {
-      algorithm: 'HS256'
-   })
-   const data=new model({
-      userName:req.body.userName,
-      userPass:req.body.userPass,
-      userToken: token
-   });
-   const value = await data.save();
-   res.json(value); //send the same data back 
-   console.log("New user Added");
-})
 
 
 
-//verifyJWT: verify if user has the correct Token when connection to endpoints
-//Also check if user is an Admin
-const verifyJWT = (req, res) => {
-   const usr = req.headers['authorization']//Bearer, takes care of extracting said token.
-   const token = usr.split(' ')[1]
-   try {
-   const decoded = jwt.verify(token, 'jwt-secret')
-   res.send({
-      'msg':`Hello, ${decoded.name}! Your JSON Web Token has been verified.`,
-      'Admin': `${decoded.admin}`
-   
-   })
-   }catch (err) {
-   res.status(401).send({'err': 'Bad JWT!'})
-   
-}}
+
+
 
 
 
 
 //ADD TO LIST
 //PUSH = find the user doc and add more items to the toDoList array
-app.put('/update', verifyJWT, async(req,res)=>{
+app.put('/update', veriJWT, async(req,res)=>{
 
 //1.Find the doc by userName
 //2. Push the new item to the toDoList. if toDoList, does not exist, one will be created.
@@ -212,7 +224,7 @@ app.put('/update', verifyJWT, async(req,res)=>{
 
 
 //DELETE item from ToDoList
-app.delete('/remove', verifyJWT, (req,res)=>{
+app.delete('/remove', veriJWT, (req,res)=>{
 
    //1.Find the doc by userName
    //2. Pull the query item from the toDoList.

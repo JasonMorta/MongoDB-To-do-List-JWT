@@ -29,13 +29,9 @@ export default class App extends Component {
 
   //SIGN-UP Button
   addUser = (e) => {
-      if (!this.state.requireNewPass || !this.state.requireNewName) {
+      if ( !this.state.requireNewName) {
         alert("Please enter a User name and Password");
       } else {
-        //save password to sessionStorage
-        sessionStorage.newUserP = this.state.PassValue;
-        sessionStorage.newUserN = this.state.nameValue;
-        // alert("welcome "+sessionStorage.newUserN)
         this.setState({
           signUp: false, //if true, display sign-up window
           toDoWin: true,
@@ -48,20 +44,17 @@ export default class App extends Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userName: this.state.nameValue,
-          userPass: this.state.PassValue
         }),
         //handle errors
       })
         .then((res) => res.json())
-        .then((response) =>
-        
+        .then((response) =>{
+          localStorage.setItem("token", "Bearer " + response.userToken)
           this.setState({
               userToDOList: response,
-            
             },()=>{
-             
-             console.log(response)
-            })
+
+            })}
         )
         .catch((error) => console.log("Error:", error));
     };
@@ -79,26 +72,34 @@ export default class App extends Component {
         //Find user data in db
          fetch('/findUser', {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "authorization":  `${localStorage.getItem("token")}`
+           },
           body: JSON.stringify({
             userName: this.state.userNameInputValue,
-            userPass: this.state.userPassInputValue
           }),
           //handle errors
         })
           .then((res) => res.json())
           .then((response) =>{
-            localStorage.setItem("token", response[0].userToken)
-            console.log(response)
-            this.setState({
-            loggedIn: true,
-            userName: response[0].userName,
-            userList:response[0].toDoList,
-        
+           
+            if(!response.err){
+              console.log(response)
               
-              },()=>{
-                console.log("Logged-IN")
-              })
+              this.setState({
+                loggedIn: true,
+                userName: response[0].userName,
+                userList:response[0].toDoList,
+                  },()=>{
+                    console.log("Logged-IN")
+                  })
+               
+               }else{
+                 alert(response.err)
+               }
+            console.log(response)
+
            
             
             }
@@ -215,17 +216,16 @@ export default class App extends Component {
     .then((res) => res.json())
     .then(( response) =>{
       console.log(response)
-
+      //catch any errors in response
       if(!response.err){
      this.setState({
       userList:response.toDoList,
       })
       console.log("Added "+this.state.userList)
       }else{
-        alert("Bad Token!")
+        alert(response.err)
       }
       })
-    .catch((error) => console.log("Error:", error));
    })
 
 
