@@ -121,11 +121,14 @@ app.post('/findUser', (req,res)=>{
             message: "Some error occurred while retrieving data."
          });
       } else {
-         if (data.length == 0) {
-            res.send("User Not Found");
-         } else {
+         if (req.body.userName) {
+            console.log("Logged-in")
             res.send(data);
             console.log(data)
+         } else {
+           
+            console.log("User Not Found")
+            res.send("User Not Found");
 
          }
       }

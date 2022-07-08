@@ -204,7 +204,10 @@ export default class App extends Component {
     //This update the selected item with new values
     fetch("/update", {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "authorization":  `${localStorage.getItem("token")}`
+     },
       body: JSON.stringify({
         userName: this.state.userNameInputValue,
         toDoList: this.state.thingToDOVal,
