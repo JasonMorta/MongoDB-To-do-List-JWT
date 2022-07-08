@@ -205,25 +205,26 @@ export default class App extends Component {
         "authorization":  `${localStorage.getItem("token")}`
      },
       body: JSON.stringify({
-        toDoList: this.state.thingToDOVal,
+        userName: this.state.userName,//look for this name in db
+        toDoList: this.state.thingToDOVal,//add item to array
       })
 
     })
     .then((res) => res.json())
     .then(( response) =>{
-
-      console.log(response)
+    console.log(response)
+     
       //catch any errors in response
-    //   if(!response.err){
-    //  this.setState({
-    //   userList:response.data[0].toDoList,
-    //   })
-    //   console.log("Added "+this.state.userList)
-    //   }else{
-    //     alert(response.err)
-    //   }
-
+      if(!response.err){
+     this.setState({
+      userList:response.data[0].toDoList
       })
+      }else{
+        alert(response.err)
+      }
+   
+      })
+      
    })
 
 
@@ -254,14 +255,21 @@ this.setState({
       .then((res) => res.json())
       .then((response) => {
         console.log(response)
-          // this.setState({
-          //  deleted: !this.state.deleted,
-          // },()=>{
-          //   this.setState({
-          //     userList:response.toDoList
-          //   })
-          //   console.log(this.state.userList)
-          // })
+         
+
+     
+          //catch any errors in response
+          if(!response.err){
+            this.setState({
+              deleted: !this.state.deleted,
+             },()=>{
+               this.setState({
+                 userList:response.data[0].toDoList
+               })
+             })
+          }else{
+            alert(response.err)
+          }
   
       })
       .catch((error) => console.log("Error:", error));

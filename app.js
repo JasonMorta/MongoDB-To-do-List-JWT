@@ -212,7 +212,6 @@ app.post('/findUser', (req, res) => {
 //2.PUSH = find the user doc and add more items to the toDoList array
 app.put('/update', async (req, res) => {
 
-
    const usr = req.headers['authorization'] //Get token from localStorage/frontend
    const token = usr.split(' ')[1]
    const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
@@ -222,7 +221,7 @@ app.put('/update', async (req, res) => {
       //1.Find the doc by userName
       //2. Push the new item to the toDoList. if toDoList, does not exist, one will be created.
       model.findOneAndUpdate(
-         //{userName: req.body.userName},//find user by userName 
+         {userName: req.body.userName},//find user by userName 
          {
             $addToSet: {
                toDoList: req.body.toDoList
@@ -238,13 +237,13 @@ app.put('/update', async (req, res) => {
                   message: "Some error occurred while retrieving data."
                });
             } else {
-               if (req.body.userName) {
+               if (!req.body.userName) {
                   res.send("not Data Found");
                } else {
                   res.send({
                      'msg': `Hello, ${decoded.name}! Verification successfully.`,
                      'Admin': decoded.admin,
-                     'data': data
+                     'data': [data]
                   });
                   console.log("item Added")
                }
@@ -260,7 +259,13 @@ app.put('/update', async (req, res) => {
 
 
 //DELETE item from ToDoList
-app.delete('/remove', veriJWT, (req,res)=>{
+app.delete('/remove', (req,res)=>{
+
+   const usr = req.headers['authorization'] //Get token from localStorage/frontend
+   const token = usr.split(' ')[1]
+   const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
+
+   if (token) { //if token OK, find Mongodb DATA
 
    //1.Find the doc by userName
    //2. Pull the query item from the toDoList.
@@ -278,17 +283,30 @@ app.delete('/remove', veriJWT, (req,res)=>{
          new: true
       }, //return new updated data. if false: return old data but still updates.
    
-      (err, data) => {
-         if (err) {
-            console.log(err)
-         } else {
-            if (data == null) {
-               res.send("not Data Found");
+         (err, data) => {
+            if (err) {//If theres a server error/connection problem
+               res.status(500).send({
+                  message: "Some error occurred while retrieving data."
+               });
             } else {
-               res.send(data)
+               if (!req.body.userName) {
+                  res.send("not Data Found");
+               } else {
+                  res.send({
+                     'msg': `Hello, ${decoded.name}! Verification successfully.`,
+                     'Admin': decoded.admin,
+                     'data': [data]
+                  });
+                  console.log("item Added")
+               }
             }
-         }
+         })
+         } else {
+      res.status(401).send({ //if token secret key does not match my server key
+         'err': 'Bad JWT!'
       })
+
+   } 
    })
 
 
