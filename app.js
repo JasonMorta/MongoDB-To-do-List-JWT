@@ -139,14 +139,15 @@ app.post('/createUser', async(req,res)=>{
 const veriJWT = (req, res, next) => {
    const usr = req.headers['authorization']//Bearer, takes care of extracting said token.
    const token = usr.split(' ')[1]
+   
    if(token){
    const decoded = jwt.verify(token, 'jwt-secret')
-   
-   console.log(
-      {
-         'msg':`Hello, ${decoded.name}! Your JSON Web Token has been verified.`,
-         'Admin': `${decoded.admin}`
-      })
+   console.log(decoded)
+   // console.log(
+   //    {
+   //       'msg':`Hello, ${decoded.name}! Your JSON Web Token has been verified.`,
+   //       'Admin': `${decoded.admin}`
+   //    })
   
    } else {
    res.status(401).send({'err': 'Bad JWT!'})
