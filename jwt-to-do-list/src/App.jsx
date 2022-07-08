@@ -89,16 +89,15 @@ export default class App extends Component {
               
               this.setState({
                 loggedIn: true,
-                userName: response[0].userName,
-                userList:response[0].toDoList,
+                userName: response.data[0].userName,
+                userList:response.data[0].toDoList,
                   },()=>{
-                    console.log("Logged-IN")
                   })
                
                }else{
                  alert(response.err)
                }
-            console.log(response)
+          
 
            
             
