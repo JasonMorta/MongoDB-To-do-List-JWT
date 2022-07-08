@@ -46,65 +46,65 @@ const model=mongoose.model("ToDoLists", Schema)
 
 //Testing JWT*
 //Generate a JWT Token
-app.post('/login', (req, res) => {
-   const usr = req.body.username
-   const pwd = req.body.password
-   if (usr === 'zama' && pwd === 'secret') {
-      payload = {
-         'name': usr,
-         'admin': false
-      }
-      const token = jwt.sign(JSON.stringify(payload), 'jwt-secret', {
-         algorithm: 'HS256'
-      })
-      res.send({
-         'token': token
-      })
-   } else {
-      res.status(403).send({
-         'err': 'Incorrect login!'
-      })
-   }
-   })
+// app.post('/login', (req, res) => {
+//    const usr = req.body.username
+//    const pwd = req.body.password
+//    if (usr === 'zama' && pwd === 'secret') {
+//       payload = {
+//          'name': usr,
+//          'admin': false
+//       }
+//       const token = jwt.sign(JSON.stringify(payload), 'jwt-secret', {
+//          algorithm: 'HS256'
+//       })
+//       res.send({
+//          'token': token
+//       })
+//    } else {
+//       res.status(403).send({
+//          'err': 'Incorrect login!'
+//       })
+//    }
+//    })
 
 
    //Testing JWT*
    //Verify user token
-   app.get('/resource', (req, res) => {
+   // app.get('/resource', (req, res) => {
 
-      const auth = req.headers['authorization']//Bearer, takes care of extracting said token.
-      const token = auth.split(' ')[1]
-      try {
-      const decoded = jwt.verify(token, 'jwt-secret')
-      res.send({'msg':
-      `Hello, ${decoded.name}! Your JSON Web Token has been verified.`})
-      //Verify token witt the specified secret key.
-      //If verification is successful, the token can be trusted and its payload is decoded.
-      //We then use this to construct a personalized message for the user.
-      //If the verification fails, an HTTP 401 status is returned. This is the REST standard for bad authorization.
-      }catch (err) {
-      res.status(401).send({'err': 'Bad JWT!'})
+   //    const auth = req.headers['authorization']//Bearer, takes care of extracting said token.
+   //    const token = auth.split(' ')[1]
+   //    try {
+   //    const decoded = jwt.verify(token, 'jwt-secret')
+   //    res.send({'msg':
+   //    `Hello, ${decoded.name}! Your JSON Web Token has been verified.`})
+   //    //Verify token witt the specified secret key.
+   //    //If verification is successful, the token can be trusted and its payload is decoded.
+   //    //We then use this to construct a personalized message for the user.
+   //    //If the verification fails, an HTTP 401 status is returned. This is the REST standard for bad authorization.
+   //    }catch (err) {
+   //    res.status(401).send({'err': 'Bad JWT!'})
 
-      }})
+   //    }})
 
    //Testing JWT* Verify a user access
-      app.get('/admin_resource', (req, res) => {
-         const token = req.headers['authorization'].split(' ')[1]
-         try {
-            const decoded = jwt.verify(token, 'jwt-secret')
-            if (decoded.admin) {
-               res.send({
-                  'msg': 'Success!'
-               })
-            } else {
-               res.status(403).send({
-                  'msg': 'Your JWT was verified, but you are not an admin.'
-               })
-            }
-         } catch (e) {
-            res.sendStatus(401)
-         }
-      })
+      // app.get('/admin_resource', (req, res) => {
+      //    const token = req.headers['authorization'].split(' ')[1]
+      //    try {
+      //       const decoded = jwt.verify(token, 'jwt-secret')
+      //       if (decoded.admin) {
+      //          res.send({
+      //             'msg': 'Success!'
+      //          })
+      //       } else {
+      //          res.status(403).send({
+      //             'msg': 'Your JWT was verified, but you are not an admin.'
+      //          })
+      //       }
+      //    } catch (e) {
+      //       res.sendStatus(401)
+      //    }
+      // })
 
 
 //On LOG-IN get the user todoList
@@ -189,7 +189,7 @@ app.put('/update', verifyJWT, async(req,res)=>{
 //2. Push the new item to the toDoList. if toDoList, does not exist, one will be created.
 
    model.findOneAndUpdate(
-   {userName: req.body.userName},//find user by userName 
+   //{userName: req.body.userName},//find user by userName 
    {$addToSet:{toDoList: req.body.toDoList}},
 
    {

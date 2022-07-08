@@ -89,7 +89,8 @@ export default class App extends Component {
           .then((res) => res.json())
           .then((response) =>{
             localStorage.setItem("token", response[0].userToken)
-           this.setState({
+            console.log(response)
+            this.setState({
             loggedIn: true,
             userName: response[0].userName,
             userList:response[0].toDoList,
@@ -97,8 +98,6 @@ export default class App extends Component {
               
               },()=>{
                 console.log("Logged-IN")
-    
-                console.log(this.state.userToken)
               })
            
             
@@ -209,19 +208,22 @@ export default class App extends Component {
         "authorization":  `${localStorage.getItem("token")}`
      },
       body: JSON.stringify({
-        userName: this.state.userNameInputValue,
         toDoList: this.state.thingToDOVal,
       })
 
     })
     .then((res) => res.json())
     .then(( response) =>{
+      console.log(response)
+
+      if(!response.err){
      this.setState({
       userList:response.toDoList,
-  
       })
       console.log("Added "+this.state.userList)
-
+      }else{
+        alert("Bad Token!")
+      }
       })
     .catch((error) => console.log("Error:", error));
    })
