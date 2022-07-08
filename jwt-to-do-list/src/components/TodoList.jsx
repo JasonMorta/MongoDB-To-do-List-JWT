@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import trash from '../img/trash.png'
+import { Link } from "react-router-dom";
 
 export default function TodoList(props) {
 
@@ -29,7 +30,7 @@ export default function TodoList(props) {
             <img src={trash} 
             alt="trash" 
             className="trash-icon"
-            data-listItem={doc}
+            data-listitem={doc}
             onClick={props.deleteItem}/>
         </div>
        
@@ -54,10 +55,9 @@ export default function TodoList(props) {
         </Button>
         
       </InputGroup>
-      <Button 
-      onClick={props.logOut}
-      variant="danger" 
-      className='logOut-btn'>Log Out</Button>
+      <Button className='logOut-btn' onClick={props.logOut}>
+        <Link to="/">Log Out</Link>
+      </Button>
   </div>
   )
 }

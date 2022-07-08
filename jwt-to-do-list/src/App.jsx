@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import TodoList from "./components/TodoList";
 import LogIn from "./components/LogIn";
@@ -59,6 +60,41 @@ export default class App extends Component {
         .catch((error) => console.log("Error:", error));
     };
 
+      //after Sign-Up log-in
+            //Find user data in db
+            fetch('/findUser', {
+              method: "POST",
+              headers: { 
+                "Content-Type": "application/json",
+                "authorization":  `${localStorage.getItem("token")}`
+               },
+              body: JSON.stringify({
+                userName: this.state.requireNewName,
+              }),
+              //handle errors
+            })
+              .then((res) => res.json())
+              .then((response) =>{
+               
+                console.log(response)
+                // if(!response.err){
+                //   console.log(response)
+                  
+                //   this.setState({
+                //     loggedIn: true,
+                //     userName: response.data[0].userName,
+                //     userList:response.data[0].toDoList,
+                //       },()=>{
+                //       })
+                   
+                //    }else{
+                //      alert(response.err)
+                //    }
+                
+                }
+              )
+              .catch((error) => console.log("Error:", error));
+
 
   }
 
@@ -66,6 +102,7 @@ export default class App extends Component {
   //LOG-IN
   //On log-in store JWT token to localStorage
   logIn=(e)=>{
+    console.log("username: " + this.state.userNameInputValue)
     if (
       this.state.userNameInputValue && 
       this.state.userPassInputValue) {
@@ -112,12 +149,21 @@ export default class App extends Component {
   //LOG-OUT button
   logOut = (e) => {
     this.setState({
+      userToDOList:{},
       loggedIn: false,
-      nameValue: '',
-      PassValue: '',
+      nameValue: "",
+      PassValue: "",
+      requireNewName: false,
+      requireNewPass: false,
+      requireUserPass: '',
+      requireUserName: '',
+      updated: false,
+      userName: "",
+      userList:[],
+      deleted: false, 
+      thingToDOVal: "",
       userPassInputValue: "",
-      userNameInputValue: "",
-      userToDOList: [],
+      userNameInputValue:"",
     
     },()=>{
     });
@@ -282,20 +328,36 @@ this.setState({
 
   render() {
     return (
+      <BrowserRouter>
       <div className="App">
         <section className="App-section">
+        <Routes>
+
+        <Route index  path="/" element={
+           
+          <LogIn 
+              logIn={this.logIn.bind(this)}
+              userNameInput={this.userNameInput.bind(this)}
+              userNameInputValue={this.state.userNameInputValue}
+              userPassInput={this.userPassInput.bind(this)}
+              userPassInputValue={this.state.userPassInputValue}
+              createAcc={this.createAcc.bind(this)}/>
           
+            }/>
+
+        <Route    path="/SignUp" element={ 
             <SignUp
             switchToLI={this.switchToLI.bind(this)}
               addUser={this.addUser.bind(this)}
               newNameInput={this.newNameInput.bind(this)}
               nameValue={this.state.nameValue}
               newPassInput={this.newPassInput.bind(this)}
-              PassValue={this.state.PassValue}
-            />
+              PassValue={this.state.PassValue}/>
+          }/>
        
-
-      
+          
+          <Route  path="/TodoList"  element={ 
+            
             <TodoList 
             userList={this.state.userList}
             userName={this.state.userName}
@@ -304,22 +366,16 @@ this.setState({
               addToList={this.addToList.bind(this)}
               deleteItem={this.deleteItem.bind(this)}
               logOut={this.logOut.bind(this)} />
-   
+             
+            }/>
 
          
-           
-            <LogIn 
-           
-              logIn={this.logIn.bind(this)}
-              userNameInput={this.userNameInput.bind(this)}
-              userNameInputValue={this.state.userNameInputValue}
-              userPassInput={this.userPassInput.bind(this)}
-              userPassInputValue={this.state.userPassInputValue}
-              createAcc={this.createAcc.bind(this)} />
             
-          
+            
+            </Routes>
         </section>
       </div>
+      </BrowserRouter>
     );
   }
 }

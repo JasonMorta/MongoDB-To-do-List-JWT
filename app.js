@@ -117,7 +117,7 @@ app.post('/createUser', async(req,res)=>{
    //set user privileges and payload
    payload = {
       'name': req.body.userName,
-      'admin': false
+      'admin': true
    }
    const token = jwt.sign(JSON.stringify(payload), 'jwt-secret', {
       algorithm: 'HS256'
