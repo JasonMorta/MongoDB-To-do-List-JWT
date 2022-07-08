@@ -135,56 +135,69 @@ app.post('/createUser', async(req,res)=>{
 
 
 //verifyJWT: verify if user has the correct Token when connection to endpoints
-//Also check if user is an Admin
+//Also check user Admin status
 const veriJWT = (req, res, next) => {
    const usr = req.headers['authorization']//Bearer, takes care of extracting said token.
    const token = usr.split(' ')[1]
    
    if(token){
    const decoded = jwt.verify(token, 'jwt-secret')
-   console.log(decoded)
-   // console.log(
-   //    {
-   //       'msg':`Hello, ${decoded.name}! Your JSON Web Token has been verified.`,
-   //       'Admin': `${decoded.admin}`
-   //    })
-  
+   console.log(
+      {
+         'msg':`Hello, ${decoded.name}! Your JSON Web Token has been verified.`,
+         'Admin': `${decoded.admin}`
+      })
    } else {
    res.status(401).send({'err': 'Bad JWT!'})
  
    }
-   next();
+   
 }
 
 
 
-//On LOG-IN get the user todoList
-//1. FIND the List by userName
-app.post('/findUser', veriJWT, (req,res)=>{
-   model.find(({
-      userName:req.body.userName,
-   }), (err, data) => {
+//On LOG-IN
+//1. On log-in request, VERIFY the token.
+//2. if token success, send database data& to frontend
+app.post('/findUser', (req, res) => {
 
-      if (err) {
-         console.log(err);
-         res.status(500).send({
-            message: "Some error occurred while retrieving data."
-         });
-      } else {
-         if (req.body.userName) {
-            console.log("Logged-in")
-            res.send(data);
-            console.log(data)
+   const usr = req.headers['authorization'] //Get token from localStorage/frontend
+   const token = usr.split(' ')[1]
+   const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
+   if (token) {//if token OK, find Mongodb DATA
+      model.find(({
+         userName: req.body.userName,//Find data by userName
+      }), (err, data) => {
+         if (err) {//If theres a server error/connection problem
+            res.status(500).send({
+               message: "Some error occurred while retrieving data."
+            });
+
          } else {
-           
-            console.log("User Not Found")
-            res.send("User Not Found");
+            if (req.body.userName) {//if user is found in db=>send DATA to front-end
+               console.log("Logged-in")
+               res.send({
+                  'msg': `Hello, ${decoded.name}! Verification successfully.`,
+                  'Admin': decoded.admin,
+                  'data': data
+               });
 
+            } else {
+               console.log("User Not Found")
+               res.send("User Not Found");
+
+            }
          }
-      }
-   });
-   })
+      });
+   } else {
+      res.status(401).send({//if token secret key does not match my server key
+         'err': 'Bad JWT!'
+      })
 
+   }
+
+
+})
 
 
 
@@ -195,32 +208,54 @@ app.post('/findUser', veriJWT, (req,res)=>{
 
 
 //ADD TO LIST
-//PUSH = find the user doc and add more items to the toDoList array
-app.put('/update', veriJWT, async(req,res)=>{
+//1. Verify if still the same user with user token ?
+//2.PUSH = find the user doc and add more items to the toDoList array
+app.put('/update', async (req, res) => {
 
-//1.Find the doc by userName
-//2. Push the new item to the toDoList. if toDoList, does not exist, one will be created.
 
-   model.findOneAndUpdate(
-   //{userName: req.body.userName},//find user by userName 
-   {$addToSet:{toDoList: req.body.toDoList}},
+   const usr = req.headers['authorization'] //Get token from localStorage/frontend
+   const token = usr.split(' ')[1]
+   const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
+   if (token) { //if token OK, find Mongodb DATA
 
-   {
-      new: true
-   }, //return new updated data. if false: return old data but still updates.
 
-   (err, data) => {
-      if (err) {
-         console.log(err)
-      } else {
-         if (data == null) {
-            res.send("not Data Found");
-         } else {
-            res.send(data)
-            console.log("item Added")
-         }
-      }
-   })
+      //1.Find the doc by userName
+      //2. Push the new item to the toDoList. if toDoList, does not exist, one will be created.
+      model.findOneAndUpdate(
+         //{userName: req.body.userName},//find user by userName 
+         {
+            $addToSet: {
+               toDoList: req.body.toDoList
+            }
+         },
+         {
+            new: true
+         }, //return new updated data. if false: return old data but still updates.
+
+         (err, data) => {
+            if (err) {//If theres a server error/connection problem
+               res.status(500).send({
+                  message: "Some error occurred while retrieving data."
+               });
+            } else {
+               if (req.body.userName) {
+                  res.send("not Data Found");
+               } else {
+                  res.send({
+                     'msg': `Hello, ${decoded.name}! Verification successfully.`,
+                     'Admin': decoded.admin,
+                     'data': data
+                  });
+                  console.log("item Added")
+               }
+            }
+         })
+   } else {
+      res.status(401).send({ //if token secret key does not match my server key
+         'err': 'Bad JWT!'
+      })
+
+   }
 })
 
 

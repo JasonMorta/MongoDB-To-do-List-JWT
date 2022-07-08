@@ -97,9 +97,6 @@ export default class App extends Component {
                }else{
                  alert(response.err)
                }
-          
-
-           
             
             }
           )
@@ -214,16 +211,18 @@ export default class App extends Component {
     })
     .then((res) => res.json())
     .then(( response) =>{
+
       console.log(response)
       //catch any errors in response
-      if(!response.err){
-     this.setState({
-      userList:response.toDoList,
-      })
-      console.log("Added "+this.state.userList)
-      }else{
-        alert(response.err)
-      }
+    //   if(!response.err){
+    //  this.setState({
+    //   userList:response.data[0].toDoList,
+    //   })
+    //   console.log("Added "+this.state.userList)
+    //   }else{
+    //     alert(response.err)
+    //   }
+
       })
    })
 
