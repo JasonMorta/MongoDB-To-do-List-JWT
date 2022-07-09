@@ -164,7 +164,7 @@ app.post('/findUser', (req, res) => {
    const usr = req.headers['authorization'] //Get token from localStorage/frontend
    const token = usr.split(' ')[1]
    const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
-   if (token) {//if token OK, find Mongodb DATA
+   if (req.body.userName===decoded.name) {//if token OK, find Mongodb DATA
       model.find(({
          userName: req.body.userName,//Find data by userName
       }), (err, data) => {
@@ -191,7 +191,7 @@ app.post('/findUser', (req, res) => {
       });
    } else {
       res.status(401).send({//if token secret key does not match my server key
-         'err': 'Bad JWT!'
+         'err': 'ERROR! Bad token, Create a new account.'
       })
 
    }
