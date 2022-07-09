@@ -27,24 +27,16 @@ export default function SignUp(props) {
           defaultValue={props.PassValue}
         />
       </InputGroup>
-      <Button onClick={props.addUser}
-        variant="outline-secondary" id="button-addon2">
-      <Link
-        to="/TodoList" 
-        >
-        Sign Up
+      <Link to={props.hasAccount ? "/TodoList": "/"  }
+        onClick={props.addUser} disabled>
+      <button className="My-btn" >CREATE ACCOUNT</button>
       </Link>
-      </Button>
       <br/>
     
-        <Button onClick={props.switchToLI}
-            variant="outline-secondary" id="button-addon2">
-          <Link
-            to="/" 
-            >
-            Log-In
-          </Link>
-        </Button>
+        <Link className="btn-Link"  to="/"
+           id="button-addon2" >
+          <button className="My-btn">◃ Back </button>
+        </Link>
    
     </div>
   );

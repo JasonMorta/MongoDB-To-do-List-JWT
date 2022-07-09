@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import TodoList from "./components/TodoList";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
+import ProtectedRoutes from "./ProtectedRoutes";
+import "./button.css"
+
 
 export default class App extends Component {
   constructor(props) {
@@ -12,7 +15,8 @@ export default class App extends Component {
 
     this.state = {
       userToDOList:{},
-      loggedIn: false,
+      correctLogin: "",
+      viewSignUp: true,
       nameValue: "",
       PassValue: "",
       requireNewName: false,
@@ -25,144 +29,96 @@ export default class App extends Component {
       deleted: false, 
       thingToDOVal: "",
       badToken: false,
+      hasAccount: false,
    
     };
   }
 
   //SIGN-UP Button
   addUser = (e) => {
-      if ( !this.state.requireNewName) {
-        alert("Please enter a User name and Password");
-      } else {
-        this.setState({
-          signUp: false, //if true, display sign-up window
-          toDoWin: true,
-          logIn: false,
-        });
+      if ( this.state.nameValue && this.state.PassValue ) {
+      
 
-        //Add new user to db
-      fetch('/createUser', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userName: this.state.nameValue,
-        }),
-        //handle errors
-      })
-        .then((res) => res.json())
-        .then((response) =>{
-          localStorage.setItem(this.state.nameValue, "Bearer " + response.userToken)
-          this.setState({
-              userToDOList: response,
-            },()=>{
-
-            })}
-        )
-        .catch((error) => console.log("Error:", error));
-    };
-
-      //after Sign-Up log-in
-            //Find user data in db
-  
-      setTimeout(() => {
-        fetch('/findUser', {
+          //Add new user to db
+        fetch('/createUser', {
           method: "POST",
-          headers: { 
-            "Content-Type": "application/json",
-            "authorization":  `${localStorage.getItem(this.state.nameValue)}`
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userName: this.state.nameValue,
           }),
           //handle errors
         })
-          .then((res) => res.json())
-          .then((response) =>{
-          
-            if(!response.err){
-            
-              
-              this.setState({
-                loggedIn: true,
-                userName: response.data[0].userName,
-                userList:response.data[0].toDoList,
-                  },()=>{
-                  })
-              
-              }else{
-                alert(response.err)
-              }
-            
-            }
-          )
-          .catch((error) => console.log("Error:", error));
-      }, 500);
+        .then((res) => res.json())
+        .then((response) =>{
+            localStorage.setItem(this.state.nameValue, `${response.userToken}`)
+            alert(`Welcome ${response.userName}! You can now Login`)
+            this.setState({
+                userToDOList: response,
+                hasAccount: false,
+            });
+        })
+        .catch((error) => console.log("Error:", error));
 
-  }
+      } else {
+        alert("Please enter a Name and Password");
+    
+
+
+    };
+
+
+  }//end of sign-up function
 
   
   //LOG-IN
   //On log-in store JWT token to localStorage
   logIn=(e)=>{
-    //find the key name in localStorage and compare it with userInput.
-    for (let [key, value] of Object.entries(localStorage)) {
-      console.log(`${key}`);
-    }
-  
-
-    if (
-      this.state.userNameInputValue 
-      ) {
         //Find user data in db
          fetch('/findUser', {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
-            "authorization":  `${localStorage.getItem(this.state.userNameInputValue)}`
+            "authorization":  `Bearer ${localStorage.getItem(this.state.userNameInputValue)}`
            },
           body: JSON.stringify({
             userName: this.state.userNameInputValue,
           }),
-          //handle errors
         })
-          .then((res) => res.json())
-          .then((response) =>{
-           
-            if(!response.err){
+        .then((res) => res.json())
+        .then((response) =>{
               console.log(response)
-              
-              this.setState({
-                loggedIn: true,
-                userName: response.data[0].userName,
-                userList:response.data[0].toDoList,
-                  },()=>{
-                    this.setState({
-                      badToken: false,
-                    })
-                  })
-               
-               }else{
-                 alert(response.err)
-               }
-            
-            }
-          )
-          .catch((error) => console.log("Error:", error));
 
-    } else{
-      alert("Please enter correct username & password")
-  
-  }
-  }
+              this.setState({
+                userName: response.data[0].userName,
+                userList: response.data[0].toDoList,
+                hasAccount: true,
+                correctLogin: true,
+                logInSuccess: response.msg
+              });
+        })
+
+         //Handle errors here
+         .catch((error) => {
+            if(error){
+              this.setState({
+                hasAccount: false,
+                correctLogin: false,
+                errorMessage: " Authentication Failed" 
+              })
+            }
+           
+        })
+  }//end of Log-In function
 
 
   //LOG-OUT button
   logOut = (e) => {
     this.setState({
+      hasAccount: false,
       userToDOList:{},
-      loggedIn: false,
       nameValue: "",
       PassValue: "",
+      correctLogin: false,
       requireNewName: false,
       requireNewPass: false,
       requireUserPass: '',
@@ -180,24 +136,9 @@ export default class App extends Component {
     
   };
 
-  //CREATE USER button
-  createAcc = (e) => {
-    sessionStorage.clear();
-    this.setState({
-      logIn: false,
-      signUp: true,
-      toDoWin: false,
-    });
-  };
 
-  //Switch to LOG-IN screen button
-  switchToLI=(e)=>{
-    this.setState({
-      logIn: true,
-      signUp: false,
-      toDoWin: false,
-    });
-  }
+
+
 
   //New Username Input
   newNameInput = (e) => {
@@ -241,6 +182,7 @@ export default class App extends Component {
 
 //thing to do list Input
   thingToDOInput=(e)=>{
+    console.log(e.target.value)
     this.setState({
       thingToDOVal: e.target.value,
     })
@@ -248,6 +190,7 @@ export default class App extends Component {
 
   //ADD New Item to LIST
   addToList=(e)=>{
+
    this.setState({
     userToDOList: [],
     localList:this.state.thingToDOVal,
@@ -258,7 +201,7 @@ export default class App extends Component {
       method: "PUT",
       headers: { 
         "Content-Type": "application/json",
-        "authorization":  `${localStorage.getItem("token")}`
+        "authorization":  `Bearer ${localStorage.getItem(this.state.userName)}`
      },
       body: JSON.stringify({
         userName: this.state.userName,//look for this name in db
@@ -299,7 +242,7 @@ this.setState({
       method: "DELETE",
       headers: { 
         "Content-Type": "application/json", 
-        "authorization":  localStorage.getItem("token")
+        "authorization": `Bearer ${localStorage.getItem(this.state.userName)}`
       },
       body: JSON.stringify({
         userName: this.state.userName,
@@ -332,7 +275,6 @@ this.setState({
   console.log(this.state.toDoItem)
 })
 
-
       
   }
 
@@ -340,48 +282,67 @@ this.setState({
     return (
       <BrowserRouter>
       <div className="App">
+        
         <section className="App-section">
+        <p className="try-testUser">
+          Create an account to log in
+        </p>
+        
         <Routes>
 
-        <Route index  path="/" element={
-           
-          <LogIn 
-              logIn={this.logIn.bind(this)}
-              userNameInput={this.userNameInput.bind(this)}
-              userNameInputValue={this.state.userNameInputValue}
-              userPassInput={this.userPassInput.bind(this)}
-              userPassInputValue={this.state.userPassInputValue}
-              createAcc={this.createAcc.bind(this)}/>
-          
-            }/>
+        <Route  index  path="/" element={<LogIn 
+                logIn={this.logIn.bind(this)}
+                userNameInput={this.userNameInput.bind(this)}
+                userNameInputValue={this.state.userNameInputValue}
+                userPassInput={this.userPassInput.bind(this)}
+                userPassInputValue={this.state.userPassInputValue}/>
+          }/>
 
-        <Route    path="/SignUp" element={ 
+
+        <Route path="/SignUp" element={ 
             <SignUp
-            switchToLI={this.switchToLI.bind(this)}
+              hasAccount={this.state.hasAccount}
               addUser={this.addUser.bind(this)}
               newNameInput={this.newNameInput.bind(this)}
               nameValue={this.state.nameValue}
               newPassInput={this.newPassInput.bind(this)}
               PassValue={this.state.PassValue}/>
           }/>
-       
-          
-        
-              <Route  path="/TodoList"  element={ 
+    
+
+  {/* 
+  *** The user must have an account to view the ToDoList Component.
+  *** This component wont be accessible in the url(it is protected).
+  */}
+         
+            <Route  path="/TodoList"  element={ 
               <TodoList 
-              userList={this.state.userList}
-              userName={this.state.userName}
+                errorMessage={this.state.errorMessage}
+                hasAccount={this.state.hasAccount}
+                userList={this.state.userList}
+                userName={this.state.userName}
                 thingToDOInput={this.thingToDOInput.bind(this)}
                 thingToDOVal={this.state.thingToDOVal}
                 addToList={this.addToList.bind(this)}
                 deleteItem={this.deleteItem.bind(this)}
                 logOut={this.logOut.bind(this)} />
               }/>
-            
+       
    
 
         </Routes>
+        <div className="log-in-message">
+
+          {/*
+          *** Display successful message from server when logged in.
+          */}
+          {this.state.correctLogin ? 
+          <p>{this.state.logInSuccess}</p>
+          : <></>}
+
+        </div>
         </section>
+       
       </div>
       </BrowserRouter>
     );
