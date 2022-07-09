@@ -24,6 +24,7 @@ export default class App extends Component {
       userList:[],
       deleted: false, 
       thingToDOVal: "",
+      badToken: false,
    
     };
   }
@@ -50,7 +51,7 @@ export default class App extends Component {
       })
         .then((res) => res.json())
         .then((response) =>{
-          localStorage.setItem("token", "Bearer " + response.userToken)
+          localStorage.setItem(this.state.nameValue, "Bearer " + response.userToken)
           this.setState({
               userToDOList: response,
             },()=>{
@@ -62,39 +63,40 @@ export default class App extends Component {
 
       //after Sign-Up log-in
             //Find user data in db
-            fetch('/findUser', {
-              method: "POST",
-              headers: { 
-                "Content-Type": "application/json",
-                "authorization":  `${localStorage.getItem("token")}`
-               },
-              body: JSON.stringify({
-                userName: this.state.requireNewName,
-              }),
-              //handle errors
-            })
-              .then((res) => res.json())
-              .then((response) =>{
-               
-                console.log(response)
-                // if(!response.err){
-                //   console.log(response)
-                  
-                //   this.setState({
-                //     loggedIn: true,
-                //     userName: response.data[0].userName,
-                //     userList:response.data[0].toDoList,
-                //       },()=>{
-                //       })
-                   
-                //    }else{
-                //      alert(response.err)
-                //    }
-                
-                }
-              )
-              .catch((error) => console.log("Error:", error));
-
+  
+      setTimeout(() => {
+        fetch('/findUser', {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "authorization":  `${localStorage.getItem(this.state.nameValue)}`
+          },
+          body: JSON.stringify({
+            userName: this.state.nameValue,
+          }),
+          //handle errors
+        })
+          .then((res) => res.json())
+          .then((response) =>{
+          
+            if(!response.err){
+            
+              
+              this.setState({
+                loggedIn: true,
+                userName: response.data[0].userName,
+                userList:response.data[0].toDoList,
+                  },()=>{
+                  })
+              
+              }else{
+                alert(response.err)
+              }
+            
+            }
+          )
+          .catch((error) => console.log("Error:", error));
+      }, 500);
 
   }
 
@@ -102,16 +104,21 @@ export default class App extends Component {
   //LOG-IN
   //On log-in store JWT token to localStorage
   logIn=(e)=>{
-    console.log("username: " + this.state.userNameInputValue)
+    //find the key name in localStorage and compare it with userInput.
+    for (let [key, value] of Object.entries(localStorage)) {
+      console.log(`${key}`);
+    }
+  
+
     if (
-      this.state.userNameInputValue && 
-      this.state.userPassInputValue) {
+      this.state.userNameInputValue 
+      ) {
         //Find user data in db
          fetch('/findUser', {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
-            "authorization":  `${localStorage.getItem("token")}`
+            "authorization":  `${localStorage.getItem(this.state.userNameInputValue)}`
            },
           body: JSON.stringify({
             userName: this.state.userNameInputValue,
@@ -129,6 +136,9 @@ export default class App extends Component {
                 userName: response.data[0].userName,
                 userList:response.data[0].toDoList,
                   },()=>{
+                    this.setState({
+                      badToken: false,
+                    })
                   })
                
                }else{
@@ -356,23 +366,21 @@ this.setState({
           }/>
        
           
-          <Route  path="/TodoList"  element={ 
+        
+              <Route  path="/TodoList"  element={ 
+              <TodoList 
+              userList={this.state.userList}
+              userName={this.state.userName}
+                thingToDOInput={this.thingToDOInput.bind(this)}
+                thingToDOVal={this.state.thingToDOVal}
+                addToList={this.addToList.bind(this)}
+                deleteItem={this.deleteItem.bind(this)}
+                logOut={this.logOut.bind(this)} />
+              }/>
             
-            <TodoList 
-            userList={this.state.userList}
-            userName={this.state.userName}
-              thingToDOInput={this.thingToDOInput.bind(this)}
-              thingToDOVal={this.state.thingToDOVal}
-              addToList={this.addToList.bind(this)}
-              deleteItem={this.deleteItem.bind(this)}
-              logOut={this.logOut.bind(this)} />
-             
-            }/>
+   
 
-         
-            
-            
-            </Routes>
+        </Routes>
         </section>
       </div>
       </BrowserRouter>
