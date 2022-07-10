@@ -35,10 +35,10 @@ export default class App extends Component {
   }
 
   //SIGN-UP Button
+  //1. Connect to database and send username, password.
+  //2. Db to server will respond by creating a jwt token, token is also stored in localStorage.
   addUser = (e) => {
       if ( this.state.nameValue && this.state.PassValue ) {
-      
-
           //Add new user to db
         fetch('/createUser', {
           method: "POST",
