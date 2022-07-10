@@ -400,6 +400,13 @@ Button a:hover {
   text-align: left;
   font-size: small;
 }
+.try-testUser ul {
+  
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: left;
+  padding: 0px 20px;
+}
 
 .to-do-list-outer {
   position: relative;
