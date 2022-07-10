@@ -7,28 +7,54 @@
 
 
 .App {
-    background: linear-gradient(247deg, #f1952a, #f13a3a);
-    background-size: 400% 400%;
+  background: linear-gradient(247deg, #f1952a, #f13a3a);
+  background-size: 400% 400%;
 
-    -webkit-animation: AnimationName 16s ease infinite;
-    -moz-animation: AnimationName 16s ease infinite;
-    animation: AnimationName 16s ease infinite;
+  -webkit-animation: AnimationName 16s ease infinite;
+  -moz-animation: AnimationName 16s ease infinite;
+  animation: AnimationName 16s ease infinite;
 }
 
 @-webkit-keyframes AnimationName {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
+  0% {
+    background-position: 0% 82%
+  }
+
+  50% {
+    background-position: 100% 19%
+  }
+
+  100% {
+    background-position: 0% 82%
+  }
 }
+
 @-moz-keyframes AnimationName {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
+  0% {
+    background-position: 0% 82%
+  }
+
+  50% {
+    background-position: 100% 19%
+  }
+
+  100% {
+    background-position: 0% 82%
+  }
 }
+
 @keyframes AnimationName {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
+  0% {
+    background-position: 0% 82%
+  }
+
+  50% {
+    background-position: 100% 19%
+  }
+
+  100% {
+    background-position: 0% 82%
+  }
 }
 
 .App-section {
@@ -43,42 +69,52 @@
   color: black;
 }
 
- .to-do-container .fade {
+.to-do-container {
   transition: 2s;
   opacity: 1
- }
+}
 
-  .no-data  {
-    -webkit-animation: fade-in-fwd 0.6s cubic-bezier(0.390, 0.575, 0.565, 1.000) 0.5s both;
-            animation: fade-in-fwd 0.6s cubic-bezier(0.390, 0.575, 0.565, 1.000) 0.5s both;
+/* error message animation */
+.no-data {
+  -webkit-animation: fade-in-fwd 0.6s cubic-bezier(0.390, 0.575, 0.565, 1.000) 0.5s both;
+  animation: fade-in-fwd 0.6s cubic-bezier(0.390, 0.575, 0.565, 1.000) 0.5s both;
+}
+
+@-webkit-keyframes fade-in-fwd {
+  0% {
+    -webkit-transform: translateZ(-80px);
+    transform: translateZ(-80px);
+    opacity: 0 !important;
   }
 
-  @-webkit-keyframes fade-in-fwd {
-    0% {
-      -webkit-transform: translateZ(-80px);
-              transform: translateZ(-80px);
-      opacity: 0;
-    }
-    100% {
-      -webkit-transform: translateZ(0);
-              transform: translateZ(0);
-      opacity: 1;
-    }
+  50% {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    opacity: 0.2 !important;
   }
-  @keyframes fade-in-fwd {
-    0% {
-      -webkit-transform: translateZ(-80px);
-              transform: translateZ(-80px);
-      opacity: 0;
-    }
-    100% {
-      -webkit-transform: translateZ(0);
-              transform: translateZ(0);
-      opacity: 1;
-    }
+
+  100% {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    opacity: 1;
   }
-  
-  
+}
+
+@keyframes fade-in-fwd {
+  0% {
+    -webkit-transform: translateZ(-80px);
+    transform: translateZ(-80px);
+    opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    opacity: 1;
+  }
+}
+
+
 
 .to-do-container {
   min-width: 20rem;
@@ -88,15 +124,97 @@
   padding: 1.25rem;
   position: relative;
   padding-bottom: 2.75rem;
-  transition: 2s;
-  
+  transition: .5s;
+
 }
 
 .to-do-container .card {
   width: auto;
 }
 
+.to-do-container {
+  -webkit-animation: scale-in-hor-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: scale-in-hor-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
 
+@-webkit-keyframes scale-in-hor-center {
+  0% {
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in-hor-center {
+  0% {
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.sign-up-container {
+  min-width: 20rem;
+  position: relative;
+  border: 0.1875rem solid firebrick;
+  border-radius: 0.5rem 0.5rem;
+  background-color: #ff9800;
+  padding: 1.25rem;
+
+}
+
+.sign-up-container {
+  -webkit-animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@-webkit-keyframes scale-in-ver-bottom {
+  0% {
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    -webkit-transform-origin: 0% 100%;
+    transform-origin: 0% 100%;
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    -webkit-transform-origin: 0% 100%;
+    transform-origin: 0% 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in-ver-bottom {
+  0% {
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    -webkit-transform-origin: 0% 100%;
+    transform-origin: 0% 100%;
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    -webkit-transform-origin: 0% 100%;
+    transform-origin: 0% 100%;
+    opacity: 1;
+  }
+}
 
 .logOut-btn {
   position: absolute;
@@ -108,11 +226,45 @@
 .logIn-container {
   min-width: 20rem;
   position: relative;
-    border: 0.1875rem solid firebrick;
-    border-radius: 0.5rem 0.5rem;
-    background-color: #ff9800;
-    padding: 1.25rem;
-  
+  border: 0.1875rem solid firebrick;
+  border-radius: 0.5rem 0.5rem;
+  background-color: #ff9800;
+  padding: 1.25rem;
+
+}
+
+
+.logIn-container {
+  -webkit-animation: scale-in-ver-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: scale-in-ver-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@-webkit-keyframes scale-in-ver-center {
+  0% {
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in-ver-center {
+  0% {
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
 
 .password {
@@ -136,7 +288,7 @@
   border-bottom-left-radius: 1.25rem;
 }
 
-.item-text{
+.item-text {
   display: flex;
   margin: 0;
   position: relative;
@@ -145,6 +297,7 @@
   flex-direction: row;
 
 }
+
 .item-cont:hover {
   border-top-left-radius: 1.25rem;
   background-color: #9272ca69;
@@ -154,7 +307,7 @@
   font-size: smaller;
 }
 
-.item-text::before{
+.item-text::before {
   content: "◍";
   position: relative;
   width: 1.125rem;
@@ -163,7 +316,7 @@
 }
 
 .trash-icon {
-transition: .1s;
+  transition: .1s;
 }
 
 .trash-icon:hover {
@@ -176,7 +329,7 @@ Button a {
   text-decoration: none;
   color: white;
   color: white;
- 
+
 }
 
 
@@ -186,7 +339,7 @@ Button a:hover {
 }
 
 
-.logInTwo{
+.logInTwo {
   position: absolute;
   top: -5px;
   left: 2px;
@@ -200,53 +353,69 @@ Button a:hover {
 
 }
 
-/* ----------------------------------------------
- * Generated by Animista on 2022-7-9 17:10:25
- * Licensed under FreeBSD License.
- * See http://animista.net/license for more info. 
- * w: http://animista.net, t: @cssanimista
- * ---------------------------------------------- */
-
-/**
- * ----------------------------------------
- * animation slide-in-top
- * ----------------------------------------
- */
- @-webkit-keyframes slide-in-top {
-  0% {
-    -webkit-transform: translateY(-62.5rem);
-            transform: translateY(-62.5rem);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-    opacity: 1;
-  }
-}
-@keyframes slide-in-top {
-  0% {
-    -webkit-transform: translateY(-62.5rem);
-            transform: translateY(-62.5rem);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-
 .log-in-message p {
   -webkit-animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
   animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 
 }
 
+@-webkit-keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-62.5rem);
+    transform: translateY(-62.5rem);
+    opacity: 0;
+  }
+
+  50% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-62.5rem);
+    transform: translateY(-62.5rem);
+    opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+
+
 .try-testUser {
   text-align: left;
   font-size: small;
 }
 
+.to-do-list-outer {
+  position: relative;
+}
 
+.progress {
+  width: 100%;
+  top: 50%;
+  position: absolute;
+  background-color: transparent !important;
+}
+
+.progress .indeterminate {
+  background-color: #cddc39;
+}
+
+.input-group {
+  align-items: center;
+}

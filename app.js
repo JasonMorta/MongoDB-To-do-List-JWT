@@ -124,6 +124,7 @@ app.post('/createUser', async(req,res)=>{
    })
    const data=new model({
       userName:req.body.userName,
+      userPass: req.body.userPass,
       userToken: token
    });
    const value = await data.save();
@@ -161,12 +162,9 @@ app.post('/createUser', async(req,res)=>{
 //2. if token success, send database data& to frontend
 app.post('/findUser', (req, res) => {
 
-   const usr = req.headers['authorization'] //Get token from localStorage/frontend
-   const token = usr.split(' ')[1]
-   const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
-   if (req.body.userName===decoded.name) {//if token OK, find Mongodb DATA
       model.find(({
          userName: req.body.userName,//Find data by userName
+         userPass: req.body.userPass,
       }), (err, data) => {
          if (err) {//If theres a server error/connection problem
             res.status(500).send({
@@ -174,13 +172,9 @@ app.post('/findUser', (req, res) => {
             });
 
          } else {
-            if (req.body.userName) {//if user is found in db=>send DATA to front-end
-               console.log("Logged-in")
-               res.send({
-                  'msg': `Hello, ${decoded.name}! Verification successfully.`,
-                  'Admin': decoded.admin,
-                  'data': data
-               });
+            if (req.body.userName && req.body.userPass ) {//if userName & psd is found in db=>send DATA to front-end
+               console.log(data)
+               res.send(data);
 
             } else {
                console.log("User Not Found")
@@ -189,12 +183,7 @@ app.post('/findUser', (req, res) => {
             }
          }
       });
-   } else {
-      res.status(401).send({//if token secret key does not match my server key
-         'err': 'ERROR! Bad token, Create a new account.'
-      })
 
-   }
 
 
 })
@@ -264,12 +253,9 @@ app.delete('/remove', (req,res)=>{
    const usr = req.headers['authorization'] //Get token from localStorage/frontend
    const token = usr.split(' ')[1]
    const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
-
    if (token) { //if token OK, find Mongodb DATA
-
    //1.Find the doc by userName
    //2. Pull the query item from the toDoList.
-   
       model.findOneAndUpdate({
          userName: req.body.userName
       }, 
@@ -297,7 +283,7 @@ app.delete('/remove', (req,res)=>{
                      'Admin': decoded.admin,
                      'data': [data]
                   });
-                  console.log("item Added")
+                  console.log("item deleted")
                }
             }
          })
