@@ -14,7 +14,7 @@ export default class App extends Component {
 
     this.state = {
       userToDOList: {},
-      correctLogin: "",
+      correctLogin: false,
       viewSignUp: true,
       nameValue: "",
       PassValue: "",
@@ -140,16 +140,9 @@ export default class App extends Component {
       userToDOList: {},
       nameValue: "",
       PassValue: "",
-      correctLogin: false,
-      requireNewName: false,
-      requireNewPass: false,
       requireUserPass: "",
       requireUserName: "",
-      updated: false,
       userName: "",
-      userList: [],
-      deleted: false,
-      thingToDOVal: "",
       userPassInputValue: "",
       userNameInputValue: "",
     });
@@ -362,7 +355,7 @@ export default class App extends Component {
                *** Display successful message from server when logged in.
                */}
               {this.state.correctLogin ? (
-                <p>{this.state.logInSuccess}</p>
+                <p>Welcome back {this.state.userName}!</p>
               ) : (
                 <></>
               )}
