@@ -145,6 +145,7 @@ export default class App extends Component {
       userName: "",
       userPassInputValue: "",
       userNameInputValue: "",
+      correctLogin: false,
     });
   };
 
