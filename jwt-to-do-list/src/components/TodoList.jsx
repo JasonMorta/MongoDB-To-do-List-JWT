@@ -7,13 +7,6 @@ import trash from "../img/trash.png";
 import { Link } from "react-router-dom";
 
 export default function TodoList(props) {
-  let style;
-  function css() {
-    style = {
-      transition: ".4s",
-      opacity: 1,
-    };
-  }
 
   return (
     <div className="to-do-list-outer">

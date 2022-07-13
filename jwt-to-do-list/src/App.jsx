@@ -32,9 +32,13 @@ export default class App extends Component {
     };
   }
 
-  //SIGN-UP Button
-  //1. Connect to database and send username, password.
-  //2. Db to server will respond by creating a jwt token, token is also stored in localStorage.
+  /* 
+  ========================
+  = SIGN-UP
+  ========================
+  = 1. Connect to database and send username, password.
+  = 2. Server will respond by creating a jwt token, token is also stored in localStorage.
+  */
   addUser = (e) => {
     if (this.state.nameValue && this.state.PassValue) {
       //Add new user to db
@@ -87,12 +91,17 @@ export default class App extends Component {
     );
   }; //end of sign-up function
 
-  //LOG-IN
-  //1. On log-in, verify userName & passWrd on server and get that from mongoDB.
-  //2. Also retrieve JWT token and store in localStorage
+ 
+  /* 
+  ========================
+  = LOG-IN
+  ========================
+  = 1. On log-in, verify userName & passWrd on server and get that from mongoDB.
+  = 2. Also retrieve JWT token and store in localStorage
+  */
   logIn = (e) => {
     //Find user data in db
-    fetch("/findUser", {
+    fetch("/logIn", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -132,8 +141,12 @@ export default class App extends Component {
       });
   }; //end of Log-In function
 
-  //LOG-OUT button
-  //The logout will clear all inputs and set value to default
+    /* 
+  ========================
+  = LOG-OUT
+  ========================
+  = 1. The logout button will clear all inputs and set value to default
+  */
   logOut = (e) => {
     this.setState({
       hasAccount: false,
@@ -149,6 +162,11 @@ export default class App extends Component {
     });
   };
 
+    /* 
+  ========================
+  = INPUT LISTENERS
+  ========================
+  */
   //New Username Input
   newNameInput = (e) => {
     console.log(e);
@@ -157,7 +175,6 @@ export default class App extends Component {
       nameValue: e.target.value,
     });
   };
-
   //New UserPwd Input
   newPassInput = (e) => {
     this.setState({
@@ -165,7 +182,6 @@ export default class App extends Component {
       PassValue: e.target.value,
     });
   };
-
   //UserName input
   userNameInput = (e) => {
     this.setState(
@@ -178,7 +194,6 @@ export default class App extends Component {
       }
     );
   };
-
   //userPass input
   userPassInput = (e) => {
     this.setState({
@@ -187,7 +202,6 @@ export default class App extends Component {
     });
     console.log(this.state.userPassInputValue);
   };
-
   //thing to do list Input
   thingToDOInput = (e) => {
     console.log(e.target.value);
@@ -196,8 +210,13 @@ export default class App extends Component {
     });
   };
 
-  //ADD New Item to LIST
-  //1. When making updates, check JWT token to see if still the same user.
+  /* 
+  ========================
+  = ADD TO LIST
+  ========================
+  = 1. ADD New Item to LIST
+  = 2. When making updates, check JWT token to see if still the same user.
+  */
   addToList = (e) => {
     this.setState(
       {
@@ -237,8 +256,13 @@ export default class App extends Component {
     );
   };
 
-  //DELETE item from list
-  //User JWT token to authenticate user on the backend. if pass, server will respond to request
+  /* 
+  ========================
+  = DELETE LIST ITEM
+  ========================
+  = 1. DELETE item from list
+  = 2. User JWT token to authenticate user on the backend. if pass, server will respond to request
+  */
   deleteItem = (e) => {
     this.setState(
       {
@@ -285,6 +309,11 @@ export default class App extends Component {
     );
   };
 
+    /* 
+  ========================
+  = RENDER
+  ========================
+  */
   render() {
     return (
       <BrowserRouter>
@@ -354,7 +383,7 @@ export default class App extends Component {
             <div className="log-in-message">
               {/*
                *** Display successful message from server when logged in.
-               */}
+              */}
               {this.state.correctLogin ? (
                 <p>Welcome back {this.state.userName}!</p>
               ) : (

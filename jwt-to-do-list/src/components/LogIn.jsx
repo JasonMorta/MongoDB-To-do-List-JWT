@@ -35,8 +35,7 @@ export default function LogIn(props) {
           to="/SignUp"
           className="btn-Link"
           variant="outline-secondary"
-          id="button-addon2"
-        >
+          id="button-addon2">
           <button className="My-btn">Create Account</button>
         </Link>
       </div>

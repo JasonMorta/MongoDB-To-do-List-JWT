@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -30,8 +29,7 @@ export default function SignUp(props) {
       <Link
         to={props.hasAccount ? "/TodoList" : "/"}
         onClick={props.addUser}
-        disabled
-      >
+        disabled>
         <button className="My-btn">CREATE ACCOUNT</button>
       </Link>
       <br />
