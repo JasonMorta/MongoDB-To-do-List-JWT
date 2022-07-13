@@ -55,14 +55,14 @@ export default class App extends Component {
         .then((response) => {
           localStorage.setItem(this.state.nameValue, `${response.userToken}`);
           alert(
-            `${response.userName} created successfully🥳 You can now Login`
+            `Account created successfully🥳 You can now Login`
           );
           this.setState({
             userToDOList: response,
             hasAccount: false,
           });
         })
-        .catch((error) => console.log("Error:", error));
+        .catch((error) => console.alert("Error:", error));
     } else {
       alert("Please enter a Name and Password");
     }
@@ -91,7 +91,6 @@ export default class App extends Component {
     );
   }; //end of sign-up function
 
- 
   /* 
   ========================
   = LOG-IN
@@ -125,9 +124,7 @@ export default class App extends Component {
           hasAccount: true,
           correctLogin: true,
         });
-        console.log(this.state.userName);
       })
-
       //Handle errors here
       .catch((error) => {
         if (error) {
@@ -136,7 +133,7 @@ export default class App extends Component {
             correctLogin: false,
             errorMessage: "User not found",
           });
-          console.log(error);
+          console.alert(error);
         }
       });
   }; //end of Log-In function
@@ -169,7 +166,6 @@ export default class App extends Component {
   */
   //New Username Input
   newNameInput = (e) => {
-    console.log(e);
     this.setState({
       requireNewName: e.target.required,
       nameValue: e.target.value,
@@ -188,11 +184,7 @@ export default class App extends Component {
       {
         requireUserName: e.target.required,
         userNameInputValue: e.target.value,
-      },
-      () => {
-        console.log(this.state.userNameInputValue);
-      }
-    );
+      });
   };
   //userPass input
   userPassInput = (e) => {
@@ -200,11 +192,9 @@ export default class App extends Component {
       requireUserPass: e.target.required,
       userPassInputValue: e.target.value,
     });
-    console.log(this.state.userPassInputValue);
   };
   //thing to do list Input
   thingToDOInput = (e) => {
-    console.log(e.target.value);
     this.setState({
       thingToDOVal: e.target.value,
     });
@@ -241,8 +231,6 @@ export default class App extends Component {
         })
           .then((res) => res.json())
           .then((response) => {
-            console.log(response);
-
             //catch any errors in response
             if (!response.err) {
               this.setState({
@@ -285,8 +273,6 @@ export default class App extends Component {
         })
           .then((res) => res.json())
           .then((response) => {
-            console.log(response);
-
             //catch any errors in response
             if (!response.err) {
               this.setState(
@@ -303,8 +289,7 @@ export default class App extends Component {
               alert(response.err);
             }
           })
-          .catch((error) => console.log("Error:", error));
-        console.log(this.state.toDoItem);
+          .catch((error) => console.alert("Error:", error));
       }
     );
   };
