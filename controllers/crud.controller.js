@@ -1,7 +1,7 @@
 //This file will perform all the CRUD operations
 const model = require('../model/schema.model'); //require the schema
 const jwt = require('jsonwebtoken')
-
+require('dotenv').config()
 //On LOG-IN
 //1. On log-in request, VERIFY the token.
 //2. if token success, send database data& to frontend
@@ -36,7 +36,7 @@ exports.createUser = (req, res) => {
       'name': req.body.userName,
       'admin': true
    }
-   const token = jwt.sign(JSON.stringify(payload), 'jwt-secret', {
+   const token = jwt.sign(JSON.stringify(payload), process.env.SECRET_KEY, {
       algorithm: 'HS256'
    })
    const data = new model({
@@ -56,7 +56,7 @@ exports.createUser = (req, res) => {
 exports.addItem = (req, res) => {
    const usr = req.headers['authorization'] //Get token from localStorage/frontend
    const token = usr.split(' ')[1]
-   const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
+   const decoded = jwt.verify(token,  process.env.SECRET_KEY); //verify token secret-key
    if (token) { //if token OK, find Mongodb DATA
       //1.Find the doc by userName
       //2. Push the new item to the toDoList. if toDoList, does not exist, one will be created.
@@ -102,7 +102,7 @@ exports.addItem = (req, res) => {
 exports.deleteItem = (req, res) => {
    const usr = req.headers['authorization'] //Get token from localStorage/frontend
    const token = usr.split(' ')[1]
-   const decoded = jwt.verify(token, 'jwt-secret'); //verify token secret-key
+   const decoded = jwt.verify(token,  process.env.SECRET_KEY); //verify token secret-key
    if (token) { //if token OK, find Mongodb DATA
       //1.Find the doc by userName
       //2. Pull the query item from the toDoList.

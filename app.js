@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({
    extended: false
 }))
+require('dotenv').config()
 app.use(bodyParser.json())
 
 //require routes to endpoints
@@ -16,7 +17,7 @@ require('./routes/addItem.js')(app);
 require("./routes/deleteItem.js")(app);
 
 //store API-key in
-const uri = "mongodb+srv://JMorta:testapp@mydatabase.6n2ggxn.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.DB_API_KEY;
 
 //Connect to DB
 mongoose.connect(uri, {
