@@ -303,8 +303,7 @@
   background-color: #9272ca69;
   border-bottom-left-radius: 1.25rem;
   transition: .2s;
-  padding: 0.25rem 0rem 0.25rem 0.25rem;
-  font-size: smaller;
+ 
 }
 
 .item-text::before {
@@ -394,7 +393,14 @@ Button a:hover {
 }
 
 
-
+.userName {
+  margin: 0;
+  position: absolute;
+  font-size: smaller;
+  bottom: 0;
+  left: 10px;
+  color: white;
+}
 
 .try-testUser {
   text-align: left;
@@ -425,4 +431,9 @@ Button a:hover {
 
 .input-group {
   align-items: center;
+}
+
+.card-body {
+  max-height: 400px;
+    overflow: auto;
 }
