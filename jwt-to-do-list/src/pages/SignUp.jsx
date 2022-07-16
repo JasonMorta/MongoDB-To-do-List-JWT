@@ -2,50 +2,41 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { StateContext } from "../App";
 import { useState } from "react";
-import { useContext } from "react";
 
 export default function SignUp(props) {
   //This component will create a user Account
 
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [nameTaken, setNameTaken] = useState(false);
+  const [created, setCreated] = useState("/");
 
-  const state = useContext(StateContext)
+  //Send userName to state
+  function userNameInput(e) {
+    setUserName(e.target.value);
+  }
 
+  //Send password tpt state
+  function userPass(e) {
+    setPassword(e.target.value);
+  }
 
-  //Destructuring shared state value
-  let [loggedIn, setLoggedIn, toDoList, setToDoList, logInFail, setLogInFail, loading, setLoading, data, setData] = state
+  //User must enter a name and password
+  let validate = userName && password;
 
-  const [userName, setUserName]=useState("")
-  const [password, setPassword]=useState("")
-   const  [nameTaken, setNameTaken]= useState(false)
-   const [created, setCreated]=useState("/")
-
-    //Send userName to state
-    function userNameInput(e){
-      setUserName(e.target.value)
-    }
-  
-    //Send password tpt state
-    function userPass(e){
-      setPassword(e.target.value)
-    }
-
-    //User must enter a name and password
-    let validate = userName && password
-
-    /* 
+  /* 
   ========================
   = SIGN-UP
   ========================
   = 1. Connect to database and send username, password.
   = 2. Server will respond by creating a jwt token, token is also stored in localStorage.
   */
-  async function addUser(e){
-    setNameTaken(false)
+  async function addUser(e) {
+    setNameTaken(false);
     if (validate) {
       //Add new user to db
-    await  fetch("/createUser", {
+      await fetch("/createUser", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -56,24 +47,20 @@ export default function SignUp(props) {
       })
         .then((res) => res.json())
         .then((response) => {
-          if  (response === "Username taken"){
-            setNameTaken(true)
-            setCreated("/SignUp")
-          }else{
-            alert("Account created")
+          if (response === "Username taken") {
+            setNameTaken(true);
+            setCreated("/SignUp");
+          } else {
+            alert("Account created");
           }
- 
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     } else {
       alert("Please enter a Name and Password");
     }
-    
-
-  }; //end of sign-up function
-
+  } //end of sign-up function
 
   return (
     <div className=" sign-up-container">
@@ -96,10 +83,7 @@ export default function SignUp(props) {
           defaultValue={password}
         />
       </InputGroup>
-      <Link
-        to={created}
-        onClick={addUser}
-        disabled>
+      <Link to={created} onClick={addUser} disabled>
         <button className="My-btn">CREATE ACCOUNT</button>
       </Link>
       <br />

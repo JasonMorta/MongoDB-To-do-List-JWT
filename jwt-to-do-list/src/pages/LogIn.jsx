@@ -6,32 +6,30 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { Link } from "react-router-dom";
 import { StateContext } from "../App";
 
-
-
 export default function LogIn(props) {
   //Parent state
-  const state = useContext(StateContext)
+  const state = useContext(StateContext);
 
   //Destructuring shared state value
-  let [loggedIn, setLoggedIn, toDoList, setToDoList, logInFail, setLogInFail, loading, setLoading, data, setData] = state
+  let [, , , setToDoList, , setLogInFail, , setLoading, , setData] = state;
 
-  const [userName, setUserName]=useState("")
-  const [password, setPassword]=useState("")
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
   //Send userName to state
-  function userNameInput(e){
-    setUserName(e.target.value)
+  function userNameInput(e) {
+    setUserName(e.target.value);
   }
 
   //Send password tpt state
-  function userPass(e){
-    setPassword(e.target.value)
+  function userPass(e) {
+    setPassword(e.target.value);
   }
 
- //User must enter a name and password
- let validate = userName && password
+  //User must enter a name and password
+  let validate = userName && password;
 
- /* 
+  /* 
  ====================================================
  Log-in will return a new token.
  The token will then be checked every time us user 
@@ -40,47 +38,40 @@ export default function LogIn(props) {
  */
 
   //LOG-IN
-  async function logIn(e){
-    if (validate){
-      setLoading(true)
-    //Find user data in db
-  
-    await fetch("/logIn", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userName: userName,
-        userPass: password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        setToDoList(response[0].toDoList);
-        setData(response)
-        localStorage.setItem(userName,`${response[0].userToken}`);
-        setLoading(false)
+  async function logIn(e) {
+    if (validate) {
+      setLoading(true);
+      //Find user data in db
+
+      await fetch("/logIn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userName: userName,
+          userPass: password,
+        }),
       })
-      //Handle errors here
-      .catch((error) => {
-        if (error) {
-        setData(error)
-        setToDoList([]) 
-        setLogInFail(true)
-        }
-      })
-    }else {
+        .then((res) => res.json())
+        .then((response) => {
+          setToDoList(response[0].toDoList);
+          setData(response);
+          localStorage.setItem(userName, `${response[0].userToken}`);
+          setLoading(false);
+        })
+        //Handle errors here
+        .catch((error) => {
+          if (error) {
+            setData(error);
+            setToDoList([]);
+            setLogInFail(true);
+          }
+        });
+    } else {
       alert("Please enter a Name and Password");
     }
-      
-  }; //end of Log-In function
-
-
-
-
-
-
+  } //end of Log-In function
 
   return (
     <div className="logIn-container">
@@ -105,7 +96,11 @@ export default function LogIn(props) {
       </InputGroup>
 
       <div className="My-btn-link">
-        <Link to={validate? "/TodoList": "/"} className="My-btn-cont" onClick={logIn}>
+        <Link
+          to={validate ? "/TodoList" : "/"}
+          className="My-btn-cont"
+          onClick={logIn}
+        >
           <button className="My-btn">LOG-IN</button>
         </Link>
 
@@ -113,7 +108,8 @@ export default function LogIn(props) {
           to="/SignUp"
           className="btn-Link"
           variant="outline-secondary"
-          id="button-addon2">
+          id="button-addon2"
+        >
           <button className="My-btn">Create Account</button>
         </Link>
       </div>

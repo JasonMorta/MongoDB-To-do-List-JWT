@@ -21,7 +21,7 @@ export default function TodoList(props) {
 
    //Destructuring shared state value
    //These values can now be read and modified here.
-   let [loggedIn, setLoggedIn, toDoList, setToDoList, logInFail, setLogInFail, loading, setLoading, data, setData] = state
+   let [,, toDoList, setToDoList,,, loading,, data,] = state
 
   //save new item to state.
   const [removeItem, setRemoveItem]=useState(false)
