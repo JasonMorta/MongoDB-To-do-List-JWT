@@ -33,7 +33,7 @@ exports.logIn = (req, res) => {
 //1. When A user signs in for the first time, a doc will be created,
 //2. The doc wil also have an empty toDoList
 //3. This doc will also store the user Name/password & token
-exports.createUser = async(req, res) => {
+exports.createUser = async (req, res) => {
    
    //First check is userName exists
    let validate = req.body.userName
@@ -57,9 +57,10 @@ exports.createUser = async(req, res) => {
          userPass: req.body.userPass,
          userToken: token
       });
-      const value = data.save(); //save() function creates  the module
-      res.json(value); //send the same data back 
+      const value =  data.save(); //save() function creates  the module
+       res.send(data); //send the same data back 
       console.log("New user Added");
+   
    }
 
 
@@ -145,3 +146,14 @@ exports.deleteItem = (req, res) => {
       });
    };
 };
+
+
+//Find all userName's, and password in the DB
+//Only retrieve the first 2 users
+exports.findUsers = (req, res) => {
+model.find({}, {_id: 0, toDoList: 0, userToken: 0, __v: 0},(err, data)=>{
+   res.json(data)
+ }).limit(2)
+}
+
+

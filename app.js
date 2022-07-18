@@ -9,12 +9,21 @@ app.use(bodyParser.urlencoded({
 }))
 require('dotenv').config()
 app.use(bodyParser.json())
+const model = require('./model/schema.model'); //require the schema
 
 //require routes to endpoints
 require('./routes/logIn.js')(app);
 require('./routes/createUser')(app);
 require('./routes/addItem.js')(app);
 require("./routes/deleteItem.js")(app);
+require('./routes/findUsers')(app);
+
+
+
+
+    app.get('/findAll', (req, res) => {
+     
+   })
 
 //store API-key in
 const uri = process.env.DB_API_KEY;

@@ -15,6 +15,7 @@
   height: 425px;
   position: relative;
   align-items: center;
+  z-index: 1;
 
 }
 

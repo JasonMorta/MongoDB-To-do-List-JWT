@@ -1,15 +1,13 @@
 .App {
   text-align: center;
-  background-color: #282c34;
   font-size: medium;
+  overflow: hidden;
 }
 
 
 
 .App {
-  background: linear-gradient(247deg, #8bc34a, #198754);
-  background-size: 400% 400%;
-
+  background: #002;
   -webkit-animation: AnimationName 16s ease infinite;
   -moz-animation: AnimationName 16s ease infinite;
   animation: AnimationName 16s ease infinite;
@@ -371,6 +369,7 @@ Button a:hover {
 
 .to-do-list-outer {
   position: relative;
+  z-index: 1;
 }
 
 .progress {

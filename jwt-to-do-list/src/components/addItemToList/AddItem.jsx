@@ -5,6 +5,9 @@ import { StateContext } from "../../App";
 import Button from "react-bootstrap/Button";
 import Spinner from "../loader/Spinner";
 
+
+
+//Add item to List component
 export default function AddItem() {
   const state = useContext(StateContext);
 

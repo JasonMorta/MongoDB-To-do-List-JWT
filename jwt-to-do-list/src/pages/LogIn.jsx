@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
@@ -6,6 +6,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { Link } from "react-router-dom";
 import { StateContext } from "../App";
 import './styles/log-in.css'
+import Alert from 'react-bootstrap/Alert';
 
 export default function LogIn(props) {
   //Parent state
@@ -14,8 +15,11 @@ export default function LogIn(props) {
   //Destructuring shared state value
   let [, , , setToDoList, , setLogInFail, , setLoading, , setData] = state;
 
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+  const [userName,    setUserName   ] = useState("");
+  const [password,    setPassword   ] = useState("");
+  const [showUsers,   setShowUsers  ] = useState(false);
+  const [users,       setUsers      ] = useState([])
+  const [nameAndPass, setNameAndPass] = useState(false)
 
   //Send userName to state
   function userNameInput(e) {
@@ -55,8 +59,9 @@ export default function LogIn(props) {
       })
         .then((res) => res.json())
         .then((response) => {
-          setToDoList(response[0].toDoList);
-          setData(response);
+          setToDoList(response[0].toDoList);//todolist only
+          console.log("Sign-in Page")
+          setData(response);//user data including token
           localStorage.setItem(userName, `${response[0].userToken}`);
           setLoading(false);
         })
@@ -69,12 +74,55 @@ export default function LogIn(props) {
           }
         });
     } else {
-      alert("Please enter a Name and Password");
+      setNameAndPass(true)
+      alert("Please enter a name and password")
     }
   } //end of Log-In function
 
+
+  /* 
+  ======================================
+  Return all the username from MongoDb
+  ======================================
+  */
+  async function getUser() {
+    setShowUsers(true)
+    await fetch("/findUsers", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((res) => res.json())
+    .then((response) => {
+      setUsers(response)
+      console.log(response)
+    })
+    .catch((error) => {
+      setShowUsers(false)
+      console.log(error)
+    })
+  }
+
+  //Load users from DB on page load
+    useEffect(() => {
+      getUser()
+    },[])
+    
+ 
+
   return (
     <div className="logIn-container">
+      {showUsers ? <Alert variant="success">
+      <Alert.Heading>Test users</Alert.Heading>
+      <hr />
+      <ul>
+        {users.map(user=>(
+          <li key={user.userName}>{user.userName} : {user.userPass}</li>
+        ))}
+      </ul>
+    </Alert>:
+    <></>}
       <h2 style={{ color: "white", marginBottom: "1.25rem" }}>Log-In</h2>
       <InputGroup className="mb-3">
         <Form.Control
