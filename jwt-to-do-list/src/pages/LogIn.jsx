@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Link } from "react-router-dom";
 import { StateContext } from "../App";
+import './styles/log-in.css'
 
 export default function LogIn(props) {
   //Parent state
@@ -97,10 +98,11 @@ export default function LogIn(props) {
       <div className="My-btn-link">
         <Link
           to={validate ? "/TodoList" : "/"}
-          className="My-btn-cont"
+          
+          className="My-btn"
           onClick={logIn}
         >
-          <button className="My-btn">LOG-IN</button>
+          LOG-IN
         </Link>
 
         <Link

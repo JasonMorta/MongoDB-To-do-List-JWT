@@ -7,7 +7,7 @@
 
 
 .App {
-  background: linear-gradient(247deg, #f1952a, #f13a3a);
+  background: linear-gradient(247deg, #8bc34a, #198754);
   background-size: 400% 400%;
 
   -webkit-animation: AnimationName 16s ease infinite;
@@ -134,7 +134,7 @@
 }
 
 .to-do-container .card {
-  width: auto;
+  width: 100%;
 }
 
 .to-do-container {
@@ -170,61 +170,9 @@
   }
 }
 
-.sign-up-container {
-  min-width: 20rem;
-  position: relative;
-  border-radius: 0.5rem 0.5rem;
-  padding: 1.25rem;
-  background-image: url('./img/ptn1.gif');
-  flex-direction: column;
-  justify-content: space-evenly;
-  display: flex;
-  height: 425px;
-  position: relative;
-  align-items: center;
 
-}
 
-.sign-up-container {
-  -webkit-animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-  animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
 
-@-webkit-keyframes scale-in-ver-bottom {
-  0% {
-    -webkit-transform: scaleY(0);
-    transform: scaleY(0);
-    -webkit-transform-origin: 0% 100%;
-    transform-origin: 0% 100%;
-    opacity: 1;
-  }
-
-  100% {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1);
-    -webkit-transform-origin: 0% 100%;
-    transform-origin: 0% 100%;
-    opacity: 1;
-  }
-}
-
-@keyframes scale-in-ver-bottom {
-  0% {
-    -webkit-transform: scaleY(0);
-    transform: scaleY(0);
-    -webkit-transform-origin: 0% 100%;
-    transform-origin: 0% 100%;
-    opacity: 1;
-  }
-
-  100% {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1);
-    -webkit-transform-origin: 0% 100%;
-    transform-origin: 0% 100%;
-    opacity: 1;
-  }
-}
 
 .logOut-btn {
   position: absolute;
@@ -233,53 +181,7 @@
 }
 
 
-.logIn-container {
-  min-width: 20rem;
-  position: relative;
-  background-image: url('./img/ptn1.gif');
-  border-radius: 0.5rem 0.5rem;
-  flex-direction: column;
-  justify-content: space-evenly;
-  padding: 1.25rem;
-  height: 425px;
-  display: flex;
-  position: relative;
 
-}
-
-
-.logIn-container {
-  -webkit-animation: scale-in-ver-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-  animation: scale-in-ver-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
-
-@-webkit-keyframes scale-in-ver-center {
-  0% {
-    -webkit-transform: scaleY(0);
-    transform: scaleY(0);
-    opacity: 1;
-  }
-
-  100% {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1);
-    opacity: 1;
-  }
-}
-
-@keyframes scale-in-ver-center {
-  0% {
-    -webkit-transform: scaleY(0);
-    transform: scaleY(0);
-    opacity: 1;
-  }
-
-  100% {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1);
-    opacity: 1;
-  }
-}
 
 .password {
   -webkit-text-security: square;
@@ -414,6 +316,45 @@ Button a:hover {
   bottom: 0;
   left: 10px;
   color: white;
+}
+
+.sign-up-page {
+  width: 100%;
+  height: fit-content;
+  top: 0;
+    left: 50%;
+    transform: translate(-50%, 0px);
+    color: #ff5722;
+    -webkit-text-stroke-width: thin;
+    -webkit-text-stroke-color: #e00000;
+}
+
+.sign-up-page {
+	-webkit-animation: blink-2 0.9s infinite both;
+	        animation: blink-2 0.9s infinite both;
+}
+
+@-webkit-keyframes blink-2 {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes blink-2 {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .try-testUser {

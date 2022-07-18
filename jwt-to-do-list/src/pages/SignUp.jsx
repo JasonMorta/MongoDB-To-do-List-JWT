@@ -1,8 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { 
+  Link , 
+  Redirect,
+  useHistory,
+  useLocation } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useState } from "react";
+import './styles/sign-up.css'
 
 export default function SignUp(props) {
   //This component will create a user Account
@@ -10,7 +15,6 @@ export default function SignUp(props) {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [nameTaken, setNameTaken] = useState(false);
-  const [created, setCreated] = useState("/");
 
   //Send userName to state
   function userNameInput(e) {
@@ -24,7 +28,7 @@ export default function SignUp(props) {
 
   //User must enter a name and password
   let validate = userName && password;
-
+  let history = useHistory();//This hook is used to redirect the page to the log-in when creating an account successfully
   /* 
   ========================
   = SIGN-UP
@@ -48,10 +52,18 @@ export default function SignUp(props) {
         .then((res) => res.json())
         .then((response) => {
           if (response === "Username taken") {
+            
+            console.log(response)
             setNameTaken(true);
-            setCreated("/SignUp");
           } else {
-            alert("Account created");
+            
+           
+            
+            
+            setTimeout(() => {
+              history.push("/")
+            }, 3000);
+            
           }
         })
         .catch((error) => {
@@ -60,6 +72,7 @@ export default function SignUp(props) {
     } else {
       alert("Please enter a Name and Password");
     }
+    
   } //end of sign-up function
 
   return (
@@ -83,7 +96,7 @@ export default function SignUp(props) {
           defaultValue={password}
         />
       </InputGroup>
-      <Link to={created} onClick={addUser} disabled>
+      <Link onClick={addUser} to="/SignUp">
         <button className="My-btn">CREATE ACCOUNT</button>
       </Link>
       <br />
@@ -91,6 +104,7 @@ export default function SignUp(props) {
       <Link className="btn-Link" to="/" id="button-addon2">
         <button className="My-btn">◃ Back </button>
       </Link>
+      {nameTaken ? <p className="userName sign-up-page">User name already taken</p>: <></>}
     </div>
   );
 }

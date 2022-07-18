@@ -13,7 +13,8 @@ export default function AddItem() {
   let [, , , setToDoList, , , , , data, ,] = state;
 
   //save new item to state.
-
+  //this state will replace the existing input field with a dummy when adding items to list.
+  //This dummy will then be removed and the original input field will  be placed. this is done to clear the input.
   const [addNew, setAddNew] = useState(false);
 
   //this value will be sent to server
@@ -52,11 +53,13 @@ export default function AddItem() {
   return (
     <>
       {addNew ? (
-        <></>
+        <Form.Control 
+        value=" "
+        />
       ) : (
         <Form.Control
           placeholder="Add to list"
-          aria-label="Recipient's username"
+          aria-label="Add Item"
           aria-describedby="basic-addon2"
           onInput={newItemText}
           defaultValue={thingToDOVal}

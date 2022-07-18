@@ -24,6 +24,7 @@ export default function TodoList(props) {
    let [,, toDoList, setToDoList,,, loading,, data,] = state
 
   //save new item to state.
+  //this state will change to heading text when deleting an item
   const [removeItem, setRemoveItem]=useState(false)
 
 
@@ -63,6 +64,7 @@ export default function TodoList(props) {
         <div className="to-do-container">
           <Card border="info" style={{ borderColor: "firebrick" }}>
             <Card.Header style={{ position: "relative" }}>
+              {/* To clear the input I added a condition that will will remove and reinsert the element. */}
               {removeItem ? "Deleting...♻" :"TO DO LIST"}
             </Card.Header>
             <Card.Body>
@@ -93,7 +95,7 @@ export default function TodoList(props) {
           <button className="My-btn" onClick={props.logOut} variant="dark">
             <Link to="/">Log Out</Link>
           </button>
-          <p className="userName">{data[0].userName}'s To-Do-List</p>
+          <p className="userName">{`User: ${data[0].userName}`}</p>
         </div>
      
        

@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, createContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router,
+  Switch,
+  Route } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import TodoList from "./pages/TodoList";
@@ -34,17 +36,23 @@ export default function App() {
         setData,
       ]}
     >
-      <BrowserRouter>
-        <div className="App">
-          <section className="App-section">
-            <Routes>
-              <Route index path="/" element={<LogIn />} />
-              <Route path="/SignUp" element={<SignUp />} />
-              <Route path="/TodoList" element={<TodoList />} />
-            </Routes>
-          </section>
-        </div>
-      </BrowserRouter>
+      <div className="App">
+        <section className="App-section">
+          <Switch>
+            
+            <Route path="/SignUp">
+              <SignUp />
+            </Route>
+            <Route path="/TodoList">
+              <TodoList />
+            </Route>
+
+            <Route path="/">
+              <LogIn />
+            </Route>
+          </Switch>
+        </section>
+      </div>
     </StateContext.Provider>
   );
 }
