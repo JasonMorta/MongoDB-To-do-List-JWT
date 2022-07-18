@@ -118,13 +118,18 @@
 
 .to-do-container {
   min-width: 20rem;
-  border: 0.1875rem solid firebrick;
   border-radius: 0.5rem 0.5rem;
-  background-color: #27262b;
   padding: 1.25rem;
   position: relative;
   padding-bottom: 2.75rem;
   transition: .5s;
+  background-image: url('./img/ptn1.gif');
+  flex-direction: column;
+  justify-content: space-evenly;
+  display: flex;
+  position: relative;
+  align-items: center;
+
 
 }
 
@@ -168,10 +173,15 @@
 .sign-up-container {
   min-width: 20rem;
   position: relative;
-  border: 0.1875rem solid firebrick;
   border-radius: 0.5rem 0.5rem;
-  background-color: #ff9800;
   padding: 1.25rem;
+  background-image: url('./img/ptn1.gif');
+  flex-direction: column;
+  justify-content: space-evenly;
+  display: flex;
+  height: 425px;
+  position: relative;
+  align-items: center;
 
 }
 
@@ -226,10 +236,14 @@
 .logIn-container {
   min-width: 20rem;
   position: relative;
-  border: 0.1875rem solid firebrick;
+  background-image: url('./img/ptn1.gif');
   border-radius: 0.5rem 0.5rem;
-  background-color: #ff9800;
+  flex-direction: column;
+  justify-content: space-evenly;
   padding: 1.25rem;
+  height: 425px;
+  display: flex;
+  position: relative;
 
 }
 

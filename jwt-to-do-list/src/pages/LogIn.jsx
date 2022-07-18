@@ -42,7 +42,6 @@ export default function LogIn(props) {
     if (validate) {
       setLoading(true);
       //Find user data in db
-
       await fetch("/logIn", {
         method: "POST",
         headers: {
