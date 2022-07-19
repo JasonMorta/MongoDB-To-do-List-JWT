@@ -52,6 +52,7 @@ export default function TodoList(props) {
       })
       .catch((error) =>{
          setRemoveItem(false)
+         alert(error)
         });
   }
   
