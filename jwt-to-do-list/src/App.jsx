@@ -1,13 +1,12 @@
 import React from "react";
 import { useState, createContext } from "react";
-import { BrowserRouter as Router,
-  Switch,
-  Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import TodoList from "./pages/TodoList";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
+import FloatinBubble from "./components/floatingAnimation/FloatinBubble";
 
 //create context hook
 //This hook allow any nested children to share and alter data without the use of props.
@@ -38,21 +37,17 @@ export default function App() {
     >
       <div className="App">
         <section className="App-section">
-          <Switch>
-            
-            <Route path="/SignUp">
-              <SignUp />
-            </Route>
-            <Route path="/TodoList">
-              <TodoList />
-            </Route>
-
-            <Route path="/">
-              <LogIn />
-            </Route>
-          </Switch>
+          <Router>
+            <Routes>
+              <Route path="/" element={<LogIn />} />
+              <Route path="/SignUp" element={<SignUp />} />
+              <Route path="/TodoList" element={<TodoList />} />
+            </Routes>
+          </Router>
         </section>
       </div>
+      <FloatinBubble />
+      <FloatinBubble />
     </StateContext.Provider>
   );
 }

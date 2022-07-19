@@ -5,7 +5,7 @@ const Schema={
    userName  : String,
    userPass  : String,
    toDoList  : [String],
-   userToken : String,
+   userToken : [String],
    created   : Date,
 }
 
