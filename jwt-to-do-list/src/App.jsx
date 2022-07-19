@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, createContext } from "react";
-import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation} from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import TodoList from "./pages/TodoList";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
 import FloatinBubble from "./components/floatingAnimation/FloatinBubble";
+import ErrorPage from "./pages/ErrorPage";
 
 //create context hook
 //This hook allow any nested children to share and alter data without the use of props.
 export const StateContext = createContext();
 
+
+
 export default function App() {
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [toDoList, setToDoList] = useState([]);
   const [logInFail, setLogInFail] = useState(false);
@@ -41,7 +45,8 @@ export default function App() {
             <Routes>
               <Route path="/" element={<LogIn />} />
               <Route path="/SignUp" element={<SignUp />} />
-              <Route path="/TodoList" element={<TodoList />} />
+              <Route path="/TodoList" caseSensitive element={<TodoList />} />
+              <Route path="*" element={<ErrorPage />} />
             </Routes>
           </Router>
         </section>

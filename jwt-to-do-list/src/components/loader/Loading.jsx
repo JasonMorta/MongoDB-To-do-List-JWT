@@ -12,8 +12,12 @@ export default function Loading() {
   const state = useContext(StateContext);
 
   //Destructuring shared state value
-  let [, , , , logInFail, , , , , ,] = state;
+  let [loggedIn, , , ,logInFail, , , loading,setLoading , ,] = state;
 
+  
+
+
+  let navigate
   return (
     <div >
       {logInFail ? (

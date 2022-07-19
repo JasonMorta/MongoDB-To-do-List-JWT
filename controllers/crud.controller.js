@@ -6,27 +6,17 @@ require('dotenv').config()
 //1. On log-in request, VERIFY the token.
 //2. if token success, send database data& to frontend
 let userName;
-
-exports.logIn = (req, res) => {
+exports.logIn =  (req, res) => {
    userName = req.body.userName
-   model.find(({
-      userName: req.body.userName, //Find data by userName
-      userPass: req.body.userPass,
-   }), (err, data) => {
-      if (err) { //If theres a server error/connection problem
-         res.status(500).send({
-            message: "Some error occurred while retrieving data."
-         });
-      } else {
-         if (req.body.userName && req.body.userPass) { //if userName & psd is found in db=>send DATA to front-end
-            console.log("Logged In")
-            res.send(data);
+   model.find({ 
+      userName: userName, //Find data by userName
+      userPass: req.body.userPass }, function (err, docs) {
+         if(docs.length > 0){
+            res.send(docs)
          } else {
-            console.log("User Not Found")
-            res.send("User Not Found");
+            res.send("User not found")
          }
-      }
-   });
+      })
 };
 
 //POST= create the document on SIGN-UP
@@ -96,7 +86,6 @@ exports.addItem = (req, res) => {
                      'Admin': decoded.admin,
                      'data': [data]
                   });
-                  console.log("item Added")
              })
    } else {
       res.status(401).send({ //if token secret key does not match my server key
@@ -110,7 +99,6 @@ exports.addItem = (req, res) => {
 //DELETE item from ToDoList
 //Verify JWT token before deleting items
 exports.deleteItem = (req, res) => {
-   console.log(req.body.toDoList)
    const usr = req.headers['authorization'] //Get token from localStorage/frontend
    const token = usr.split(' ')[1]
    const decoded = jwt.verify(token,  process.env.SECRET_KEY); //verify token secret-key
@@ -146,7 +134,6 @@ exports.deleteItem = (req, res) => {
       });
    };
 };
-
 
 //Find all userName's, and password in the DB
 //Only retrieve the first 2 users

@@ -10,12 +10,14 @@ import { useState } from "react";
 import './styles/sign-up.css'
 import { StateContext } from "../App";
 import Loading from "../components/loader/Loading";
+import { useEffect } from "react";
 
 
 
 //This component will create a user Account
 export default function SignUp(props) {
-  
+
+
   //navigate to home pahe if account created successuffly
   let navigate = useNavigate();
 
@@ -23,11 +25,21 @@ export default function SignUp(props) {
   const state = useContext(StateContext)
 
   //Destructuring shared state value
-  let [,,,setToDoList,logInFail,setLogInFail,loading,setLoading,data,setData] = state;
+  let [,setLoggedIn,,setToDoList,logInFail,setLogInFail,loading,setLoading,data,setData] = state;
 
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [nameTaken, setNameTaken] = useState(false);
+
+
+      //Load users from DB on page load
+      useEffect(() => {
+          setToDoList([]);
+          setLoggedIn(false)
+      },[])
+
+
+
 
   //Send userName to state
   function userNameInput(e) {
@@ -42,7 +54,7 @@ export default function SignUp(props) {
   //User must enter a name and password
   let validate = userName && password;
 
-  //LogIn after account created
+  //LOG-IN after account created
   //This logIn will follow the same process as the log-in component.
   async function logIn(e) {
     setLoading(true);
@@ -58,20 +70,20 @@ export default function SignUp(props) {
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response)
-        setToDoList(response[0].toDoList);
-        setData(response);
+        setLoggedIn(true)
+        setLogInFail(false)
         setTimeout(() => {
-          navigate('/ToDoList')
+          navigate('/TodoList')
           setLoading(false);
-        }, 1300);
-        
-        localStorage.setItem(userName, `${response[0].userToken}`);
-        
+        }, 1000);
+        setToDoList(response[0].toDoList);//todolist only
+        setData(response);//user data including token
+        sessionStorage.setItem(userName, `${response[0].userToken}`);
       })
       //Handle errors here
       .catch((error) => {
         if (error) {
+          setLoggedIn(false)
           setData(error);
           setToDoList([]);
           setLoading(false);
