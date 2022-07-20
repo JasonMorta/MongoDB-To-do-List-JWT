@@ -20,7 +20,8 @@ export default function SignUp(props) {
 
   //navigate to home pahe if account created successuffly
   let navigate = useNavigate();
-
+  
+  console.log(navigate.pathname)
   //Parent state
   const state = useContext(StateContext)
 
