@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { StateContext } from "../App";
 import './styles/log-in.css'
 import Alert from 'react-bootstrap/Alert';
+import Loading from "../components/loader/Loading";
 
 export default function LogIn(props) {
   //Parent state
@@ -14,7 +15,7 @@ export default function LogIn(props) {
   let navigate = useNavigate()
 
   //Destructuring shared state value
-  let [, , , setToDoList, , setLogInFail, , setLoading, data, setData] = state;
+  let [,setLoggedIn , , setToDoList, , setLogInFail,loading, setLoading, data, setData] = state;
 
   const [userName,    setUserName   ] = useState("");
   const [password,    setPassword   ] = useState("");
@@ -42,7 +43,6 @@ export default function LogIn(props) {
  makes an update or the to-do-list
  ===================================================
  */
-
   //LOG-IN
   async function logIn(e) {
     if (validate) {
@@ -60,19 +60,26 @@ export default function LogIn(props) {
       })
         .then((res) => res.json())
         .then((response) => {
-          
+          setLoggedIn(true)
           setToDoList(response.data[0].toDoList);
           setData(response);//user data including token
           sessionStorage.setItem(userName, `${response.token}`);
-          setLoading(false);
+         //show loading animation for 1sec
+          setTimeout(() => {
+            navigate('/TodoList')
+            setLoading(false);
+          }, 1000);
           
         })
         //Handle errors here
         .catch((error) => {
           if (error) {
+            setTimeout(() => {
             setData(error);
             setToDoList([]);
             setLogInFail(true);
+            navigate('*')
+          }, 1000);
           }
         });
     } else {
@@ -107,66 +114,67 @@ export default function LogIn(props) {
     })
   }
 
-  //Load users from DB on page load
+  //clear state values on log-up page
     useEffect(() => {
       setToDoList([])
       setData([])
       getUser()
+      setLoggedIn(false)
+      setLoading(false)
+      setLogInFail(false)
+      navigate('/')
     },[])
-    
+   
  
 
   return (
-    <div className="logIn-container">
-      {showUsers ? <Alert variant="success">
-      <Alert.Heading>Test users</Alert.Heading>
-      <hr />
-      <ul style={{paddingLeft: "19px"}}>
-        {users.map(user=>(
-          <li  key={user.userName}>{user.userName} : {user.userPass}</li>
-        ))}
-      </ul>
-    </Alert>:
-    <></>}
-      <h2 style={{ color: "white", marginBottom: "1.25rem" }}>Log-In</h2>
-      <InputGroup className="mb-3">
-        <Form.Control
-          required={true}
-          placeholder="User name"
-          onInput={userNameInput}
-          aria-describedby="basic-addon2"
-          defaultValue={userName}
-        />
-      </InputGroup>
-      <InputGroup className="mb-3 password">
-        <Form.Control
-          required={true}
-          onInput={userPass}
-          placeholder="Password"
-          aria-describedby="basic-addon2"
-          defaultValue={password}
-        />
-      </InputGroup>
-
-      <div className="My-btn-link">
-        <Link
-          to={validate ? "/TodoList" : "/"}
-          
-          className="My-btn"
-          onClick={logIn}
-        >
-          LOG-IN
-        </Link>
-
-        <Link
-          to="/SignUp"
-          className="btn-Link"
-          variant="outline-secondary"
-          id="button-addon2"
-        >
-          <button className="My-btn">Create Account</button>
-        </Link>
-      </div>
-    </div>
+<>
+      { loading ? <Loading /> : <div className="logIn-container">
+        {showUsers ? <Alert variant="success">
+        <Alert.Heading>Test users</Alert.Heading>
+        <hr />
+        <ul style={{paddingLeft: "19px"}}>
+          {users.map(user=>(
+            <li key={user.userName}>{user.userName} : {user.userPass}</li>
+          ))}
+        </ul>
+      </Alert>:
+      <></>}
+        <h2 style={{ color: "white", marginBottom: "1.25rem" }}>Log-In</h2>
+        <InputGroup className="mb-3">
+          <Form.Control
+            required={true}
+            placeholder="User name"
+            onInput={userNameInput}
+            aria-describedby="basic-addon2"
+            defaultValue={userName}
+          />
+        </InputGroup>
+        <InputGroup className="mb-3 password">
+          <Form.Control
+            required={true}
+            onInput={userPass}
+            placeholder="Password"
+            aria-describedby="basic-addon2"
+            defaultValue={password}
+          />
+        </InputGroup>
+  
+        <div className="My-btn-link">
+          <button className="My-btn" onClick={logIn}>
+            LOG-IN
+          </button>
+  
+          <Link
+            to="/SignUp"
+            className="btn-Link"
+            variant="outline-secondary"
+            id="button-addon2"
+          >
+            <button className="My-btn">Create Account</button>
+          </Link>
+        </div>
+      </div>}
+</>
   );
 }

@@ -23,7 +23,7 @@ export default function TodoList(props) {
 
    //Destructuring shared state value
    //These values can now be read and modified here.
-   let [,, toDoList, setToDoList,,, loading,, data,] = state
+   let [loggedIn,, toDoList, setToDoList,,, loading,, data,setData] = state
   
   //save new item to state.
   //this state will change to heading text when deleting an item
@@ -31,13 +31,10 @@ export default function TodoList(props) {
 
     //Log user out when route changes
     useEffect(() => {
-      console.log(data)
-      if(data.data[0].toDoList.length === 0){
-        navigate("/")
+    if(!loggedIn){
+      navigate("/")
       }
-    },[data])
-
-
+    },[loggedIn])
   //DELETE Item
   //Delete an item from the List
   async function deleteItem(e){
@@ -66,6 +63,11 @@ export default function TodoList(props) {
   }
 
 
+    function logOut(){
+      navigate("/")
+      setData([])
+      setToDoList([])
+    }
   
   return (
 
@@ -83,8 +85,8 @@ export default function TodoList(props) {
               <Card.Text>
                 <div className="user-list">
                   {toDoList.map((doc) => (
-                    <div className="item-cont">
-                      <p className="item-text">{doc}</p>
+                    <div key={doc} className="item-cont">
+                      <p  className="item-text">{doc}</p>
                       <img
                         src={trash}
                         alt="trash"
@@ -100,14 +102,14 @@ export default function TodoList(props) {
           </Card>
           <br />
           <InputGroup className="mb-3">
-           
-            <AddItem />
-            
+          <AddItem />
           </InputGroup>
-          <button className="My-btn" onClick={props.logOut} variant="dark">
-            <Link to="/">Log Out</Link>
+          <button className="My-btn" onClick={logOut} variant="dark">
+           Log out
           </button>
-          <p className="userName">{`User: ${data.data[0].userName}`}</p>
+          <p className="userName">
+            {`User: ${loggedIn ? data.data[0].userName: "No user"}`}
+          </p>
         </div>
      
        

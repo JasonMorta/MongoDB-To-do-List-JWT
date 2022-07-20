@@ -10,6 +10,7 @@ import { useState } from "react";
 import './styles/sign-up.css'
 import { StateContext } from "../App";
 import Loading from "../components/loader/Loading";
+import { useEffect } from "react";
 
 
 
@@ -34,11 +35,17 @@ export default function SignUp(props) {
   const state = useContext(StateContext)
 
   //Destructuring shared state value
-  let [,,,setToDoList,logInFail,setLogInFail,loading,setLoading,data,setData] = state;
+  let [,setLoggedIn,,setToDoList,,setLogInFail,loading,setLoading,,setData] = state;
 
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [nameTaken, setNameTaken] = useState(false);
+
+  //Prevent user from navigating to the todolist if not logged in
+  useEffect(() => {
+    setLoggedIn(false)
+  },[])
+  
 
   //Send userName to state
   function userNameInput(e) {
@@ -69,12 +76,12 @@ export default function SignUp(props) {
     })
       .then((res) => res.json())
       .then((response) => {
-      console.log(response)
-      setToDoList(response.data[0].toDoList);
-      sessionStorage.setItem(userName, `${response.token}`);
-      setData(response);
-      setTimeout(() => {
-          navigate('/ToDoList')
+        setLoggedIn(true)
+        setToDoList(response.data[0].toDoList);
+        sessionStorage.setItem(userName, `${response.token}`);
+        setData(response);
+        setTimeout(() => {
+          navigate('/TodoList')
           setLoading(false);
         }, 1300);
        })
@@ -96,10 +103,9 @@ export default function SignUp(props) {
   =//* SIGN-UP
   ========================
   = 1. Connect to database and send username, password.
-  = 2. Server will respond by creating a jwt token, token is also stored in localStorage.
+  = 2. Server will respond by creating a jwt token, token is also stored in sessionStorage.
   */
   async function addUser(e) {
-      
     if (validate) {
       //Add new user to db
       await fetch("/createUser", {

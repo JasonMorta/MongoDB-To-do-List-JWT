@@ -12,28 +12,11 @@ export default function Loading() {
   const state = useContext(StateContext);
 
   //Destructuring shared state value
-  let [loggedIn, , , ,logInFail, , , loading,setLoading , ,] = state;
-
-  
-
-
-  let navigate
+  let [, , , ,logInFail,setLogInFail , , , , ,] = state;
+   
   return (
     <div >
-      {logInFail ? (
-        <div style={{zIndex: 1,
-          color: "#f44336",
-          zIndex: 1}}>
-          <p>Incorrect username or password, return to log-in</p>
-
-          <div class="btn-cont">
-            <Link to="/">
-              <button class="My-btn"> ↩ Back</button>
-            </Link>
-          </div>
-        </div>
-      ) : (
-        <>
+     
          <p className="loading-text">loading...</p>
           <div class="lds-roller">
             <div></div>
@@ -45,8 +28,7 @@ export default function Loading() {
             <div></div>
             <div></div>
           </div>
-        </>
-      )}
+    
     </div>
   );
 }
