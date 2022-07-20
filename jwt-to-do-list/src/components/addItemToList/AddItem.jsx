@@ -35,7 +35,7 @@ export default function AddItem() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${sessionStorage.getItem(data[0].userName)}`,
+        authorization: `Bearer ${sessionStorage.getItem(data.data[0].userName)}`,
       },
       body: JSON.stringify({
         toDoList: thingToDOVal,

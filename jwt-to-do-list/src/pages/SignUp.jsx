@@ -69,14 +69,15 @@ export default function SignUp(props) {
     })
       .then((res) => res.json())
       .then((response) => {
-        setToDoList(response[0].toDoList);
-        sessionStorage.setItem(userName, `${response[0].userToken}`);
-        setData(response);
-        setTimeout(() => {
+      console.log(response)
+      setToDoList(response.data[0].toDoList);
+      sessionStorage.setItem(userName, `${response.token}`);
+      setData(response);
+      setTimeout(() => {
           navigate('/ToDoList')
           setLoading(false);
         }, 1300);
-      })
+       })
       //Handle errors here
       .catch((error) => {
         if (error) {

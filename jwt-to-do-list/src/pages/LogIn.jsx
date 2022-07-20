@@ -13,7 +13,7 @@ export default function LogIn(props) {
   const state = useContext(StateContext);
 
   //Destructuring shared state value
-  let [, , , setToDoList, , setLogInFail, , setLoading, , setData] = state;
+  let [, , , setToDoList, , setLogInFail, , setLoading, data, setData] = state;
 
   const [userName,    setUserName   ] = useState("");
   const [password,    setPassword   ] = useState("");
@@ -59,10 +59,12 @@ export default function LogIn(props) {
       })
         .then((res) => res.json())
         .then((response) => {
-          setToDoList(response[0].toDoList);//todolist only
+          
+          setToDoList(response.data[0].toDoList);
           setData(response);//user data including token
-          sessionStorage.setItem(userName, `${response[0].userToken}`);
+          sessionStorage.setItem(userName, `${response.token}`);
           setLoading(false);
+          
         })
         //Handle errors here
         .catch((error) => {
@@ -76,6 +78,8 @@ export default function LogIn(props) {
       setNameAndPass(true)
       alert("Please enter a name and password")
     }
+
+    
   } //end of Log-In function
 
 

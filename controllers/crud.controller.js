@@ -10,7 +10,7 @@ let userName;
 
 //LOG-IN
 //every time user log's in, a new token will be created and 
-//sent to DB and front-end. Token will be used to validate user when
+//sent to front-end. Token will be used to validate user when
 //making updates
 exports.logIn = (req, res) => {
    userName = req.body.userName
@@ -22,17 +22,6 @@ exports.logIn = (req, res) => {
    const token = jwt.sign(JSON.stringify(payload), process.env.SECRET_KEY, {
       algorithm: 'HS256'
    })
-   model.findOneAndUpdate({
-         userName: req.body.userName,
-      }, //find user by userName 
-      {
-         $addToSet: {
-            userToken: token
-         }
-      }, {
-         new: true
-      }, //return new updated data. if false: return old data but still updates.
-      (err, db) => {
          console.log("Token created")
          console.log("Logged In")
          model.find(({
@@ -45,7 +34,10 @@ exports.logIn = (req, res) => {
                });
             } else {
                if (req.body.userName && req.body.userPass) { //if userName & psd is found in db=>send DATA to front-end
-                  res.send(data)
+                  res.send({
+                     "data": data,
+                     "token": token
+                  })
                   console.log("Got user")
                } else {
                   console.log("User Not Found")
@@ -55,7 +47,6 @@ exports.logIn = (req, res) => {
             }
 
          })
-      })
 };
 
 //POST= create the document on SIGN-UP

@@ -22,7 +22,7 @@ export default function TodoList(props) {
    //Destructuring shared state value
    //These values can now be read and modified here.
    let [,, toDoList, setToDoList,,, loading,, data,] = state
-
+   console.log(data)
   //save new item to state.
   //this state will change to heading text when deleting an item
   const [removeItem, setRemoveItem]=useState(false)
@@ -37,7 +37,7 @@ export default function TodoList(props) {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${sessionStorage.getItem(data[0].userName)}`,
+        authorization: `Bearer ${sessionStorage.getItem(data.data[0].userName)}`,
       },
       body: JSON.stringify({
         toDoList: toDoItem,
@@ -46,9 +46,8 @@ export default function TodoList(props) {
     })
       .then((res) => res.json())
       .then((response) => {
-        setToDoList(response.data[0].toDoList)
+        setToDoList(response.data[0].toDoList);
         setRemoveItem(false)
-        
       })
       .catch((error) =>{
          setRemoveItem(false)
@@ -96,7 +95,7 @@ export default function TodoList(props) {
           <button className="My-btn" onClick={props.logOut} variant="dark">
             <Link to="/">Log Out</Link>
           </button>
-          <p className="userName">{`User: ${data[0].userName}`}</p>
+          <p className="userName">{`User: ${data.data[0].userName}`}</p>
         </div>
      
        
