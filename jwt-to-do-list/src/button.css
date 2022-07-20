@@ -4,6 +4,13 @@
    align-content: center;
    flex-direction: row;
    justify-content: space-between;
+
+}
+
+button {
+   z-index: 1;
+   position: relative;
+
 }
 
 

@@ -10,23 +10,14 @@ import { useState } from "react";
 import './styles/sign-up.css'
 import { StateContext } from "../App";
 import Loading from "../components/loader/Loading";
+import { useEffect } from "react";
 
 
 
-
-  /* 
-  ========================
-  1.  This component will create a user Account.
-  2. When a user sign's up, two functions will run.
-    - the first function will create a new document for the user on MDB,
-    - the second function will be triggered inside the first function to log-in the user also. this
-    function will find the user document in the DB and and create a new JWT token for this user. JWT 
-    token will be created every time a user log's in and stored in sessionStorage.
-  ========================
-
-  */
+//This component will create a user Account
 export default function SignUp(props) {
-  
+
+
   //navigate to home pahe if account created successuffly
   let navigate = useNavigate();
 
@@ -34,11 +25,21 @@ export default function SignUp(props) {
   const state = useContext(StateContext)
 
   //Destructuring shared state value
-  let [,,,setToDoList,logInFail,setLogInFail,loading,setLoading,data,setData] = state;
+  let [,setLoggedIn,,setToDoList,logInFail,setLogInFail,loading,setLoading,data,setData] = state;
 
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [nameTaken, setNameTaken] = useState(false);
+
+
+      //Load users from DB on page load
+      useEffect(() => {
+          setToDoList([]);
+          setLoggedIn(false)
+      },[])
+
+
+
 
   //Send userName to state
   function userNameInput(e) {
@@ -53,7 +54,7 @@ export default function SignUp(props) {
   //User must enter a name and password
   let validate = userName && password;
 
-  //* LOG-IN after account created
+  //LOG-IN after account created
   //This logIn will follow the same process as the log-in component.
   async function logIn(e) {
     setLoading(true);
@@ -69,18 +70,20 @@ export default function SignUp(props) {
     })
       .then((res) => res.json())
       .then((response) => {
-      console.log(response)
-      setToDoList(response.data[0].toDoList);
-      sessionStorage.setItem(userName, `${response.token}`);
-      setData(response);
-      setTimeout(() => {
-          navigate('/ToDoList')
+        setLoggedIn(true)
+        setLogInFail(false)
+        setTimeout(() => {
+          navigate('/TodoList')
           setLoading(false);
-        }, 1300);
-       })
+        }, 1000);
+        setToDoList(response[0].toDoList);//todolist only
+        setData(response);//user data including token
+        sessionStorage.setItem(userName, `${response[0].userToken}`);
+      })
       //Handle errors here
       .catch((error) => {
         if (error) {
+          setLoggedIn(false)
           setData(error);
           setToDoList([]);
           setLoading(false);
@@ -96,7 +99,7 @@ export default function SignUp(props) {
 
   /* 
   ========================
-  =//* SIGN-UP
+  = SIGN-UP
   ========================
   = 1. Connect to database and send username, password.
   = 2. Server will respond by creating a jwt token, token is also stored in localStorage.
@@ -121,6 +124,7 @@ export default function SignUp(props) {
           } else {
             setLoading(true);
             setNameTaken(false)
+            console.log(response)
             logIn()
           }
         })

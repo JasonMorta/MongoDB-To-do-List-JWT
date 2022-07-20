@@ -51,8 +51,8 @@
 
 .alert {
   position: absolute;
-  top: 0vmin;
-  left: -30vmin;
+  top: -50%;
+  left: 0;
   margin: 0;
   font-size: small;
 }

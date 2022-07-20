@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { StateContext } from "../App";
 import './styles/log-in.css'
 import Alert from 'react-bootstrap/Alert';
@@ -12,14 +12,25 @@ export default function LogIn(props) {
   //Parent state
   const state = useContext(StateContext);
 
+  let location = useLocation();
+  let navigate = useNavigate()
+
+
   //Destructuring shared state value
-  let [, , , setToDoList, , setLogInFail, , setLoading, data, setData] = state;
+  let [loggedIn, setLoggedIn, , setToDoList, , setLogInFail, , setLoading, , setData] = state;
 
   const [userName,    setUserName   ] = useState("");
   const [password,    setPassword   ] = useState("");
   const [showUsers,   setShowUsers  ] = useState(false);
   const [users,       setUsers      ] = useState([])
   const [nameAndPass, setNameAndPass] = useState(false)
+  
+    //Load users from DB on page load
+    useEffect(() => {
+      getUser()
+        setToDoList([]);
+        setLoggedIn(false)
+    },[])
 
   //Send userName to state
   function userNameInput(e) {
@@ -44,8 +55,8 @@ export default function LogIn(props) {
 
   //LOG-IN
   async function logIn(e) {
+    setLogInFail(true);
     if (validate) {
-      setLoading(true);
       //Find user data in db
       await fetch("/logIn", {
         method: "POST",
@@ -59,27 +70,30 @@ export default function LogIn(props) {
       })
         .then((res) => res.json())
         .then((response) => {
-          
-          setToDoList(response.data[0].toDoList);
+          setLoggedIn(true)
+          setLogInFail(false)
+          setTimeout(() => {
+            navigate('/TodoList')
+            setLogInFail(false);
+          }, 1000);
+          setToDoList(response[0].toDoList);//todolist only
           setData(response);//user data including token
-          sessionStorage.setItem(userName, `${response.token}`);
-          setLoading(false);
-          
+          sessionStorage.setItem(userName, `${response[0].userToken}`);
         })
         //Handle errors here
         .catch((error) => {
-          if (error) {
-            setData(error);
-            setToDoList([]);
-            setLogInFail(true);
-          }
-        });
+          setLogInFail(true);
+          setData(error);
+          setLoggedIn(false)
+          setToDoList([]);
+          alert("User not found")
+          });
+
     } else {
+      setLogInFail(false);
       setNameAndPass(true)
       alert("Please enter a name and password")
     }
-
-    
   } //end of Log-In function
 
 
@@ -99,6 +113,7 @@ export default function LogIn(props) {
     .then((res) => res.json())
     .then((response) => {
       setUsers(response)
+      console.log(response)
     })
     .catch((error) => {
       setShowUsers(false)
@@ -106,10 +121,7 @@ export default function LogIn(props) {
     })
   }
 
-  //Load users from DB on page load
-    useEffect(() => {
-      getUser()
-    },[])
+
     
  
 
@@ -118,9 +130,9 @@ export default function LogIn(props) {
       {showUsers ? <Alert variant="success">
       <Alert.Heading>Test users</Alert.Heading>
       <hr />
-      <ul style={{paddingLeft: "19px"}}>
+      <ul>
         {users.map(user=>(
-          <li  key={user.userName}>{user.userName} : {user.userPass}</li>
+          <li key={user.userName}>{user.userName} : {user.userPass}</li>
         ))}
       </ul>
     </Alert>:
@@ -146,14 +158,12 @@ export default function LogIn(props) {
       </InputGroup>
 
       <div className="My-btn-link">
-        <Link
-          to={validate ? "/TodoList" : "/"}
+        
           
-          className="My-btn"
-          onClick={logIn}
-        >
-          LOG-IN
-        </Link>
+         <button className="My-btn" onClick={logIn}>
+            LOG-IN
+         </button>
+     
 
         <Link
           to="/SignUp"
