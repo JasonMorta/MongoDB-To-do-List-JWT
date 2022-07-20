@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "react-bootstrap/Card";
 
 import InputGroup from "react-bootstrap/InputGroup";
 import trash from "../img/trash.png";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { StateContext } from "../App";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -12,32 +12,31 @@ import { useState } from "react";
 import Loading from "../components/loader/Loading";
 
 import AddItem from "../components/addItemToList/AddItem";
-import { useEffect } from "react";
 
 //The ToDoList page will only handle the deleted items
 //The add item will is handle in the AddItem component
-//When deleting Items, backend will verify JWT token to allow it. 
 export default function TodoList(props) {
 
-  let location = useLocation();
-  let navigate = useNavigate();
   const state = useContext(StateContext)
 
-  //Destructuring shared state value
-  //These values can now be read and modified here.
-  let [loggedIn,setLoggedIn,toDoList, setToDoList,logInFail,, loading,, data,setData] = state
+  let navigate = useNavigate()
 
+   //Destructuring shared state value
+   //These values can now be read and modified here.
+   let [,, toDoList, setToDoList,,, loading,, data,] = state
+  
   //save new item to state.
-  //this state will change the heading text when deleting an item
+  //this state will change to heading text when deleting an item
   const [removeItem, setRemoveItem]=useState(false)
 
-  //Check the current url location
-  //Return user to log-in page if not logged-in
-  useEffect(() => {
-    if (!loggedIn) {
-      navigate('/')
-    }
-  }, [location])
+    //Log user out when route changes
+    useEffect(() => {
+      console.log(data)
+      if(data.data[0].toDoList.length === 0){
+        navigate("/")
+      }
+    },[data])
+
 
   //DELETE Item
   //Delete an item from the List
@@ -48,7 +47,7 @@ export default function TodoList(props) {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${sessionStorage.getItem(data[0].userName)}`,
+        authorization: `Bearer ${sessionStorage.getItem(data.data[0].userName)}`,
       },
       body: JSON.stringify({
         toDoList: toDoItem,
@@ -57,21 +56,16 @@ export default function TodoList(props) {
     })
       .then((res) => res.json())
       .then((response) => {
-        setToDoList(response.data[0].toDoList)
+        setToDoList(response.data[0].toDoList);
         setRemoveItem(false)
       })
       .catch((error) =>{
          setRemoveItem(false)
+         alert(error)
         });
   }
 
-  //Handle Log-out
-  function logOut(){
-    setToDoList([]);
-    setData()
-    setLoggedIn(false)
-    navigate('/')
-  }
+
   
   return (
 
@@ -88,8 +82,8 @@ export default function TodoList(props) {
             <Card.Body>
               <Card.Text>
                 <div className="user-list">
-                  {loggedIn ? toDoList.map((doc) => (
-                    <div className="item-cont" key={doc}>
+                  {toDoList.map((doc) => (
+                    <div className="item-cont">
                       <p className="item-text">{doc}</p>
                       <img
                         src={trash}
@@ -99,19 +93,21 @@ export default function TodoList(props) {
                         onClick={deleteItem}
                       />
                     </div>
-                  )): <p></p>}
+                  ))}
                 </div>
               </Card.Text>
             </Card.Body>
           </Card>
           <br />
           <InputGroup className="mb-3">
+           
             <AddItem />
+            
           </InputGroup>
-          <button className="My-btn" onClick={logOut} variant="dark">
-            Log Out
+          <button className="My-btn" onClick={props.logOut} variant="dark">
+            <Link to="/">Log Out</Link>
           </button>
-          <p className="userName">{loggedIn ? `User: ${data[0].userName}` : ""}</p>
+          <p className="userName">{`User: ${data.data[0].userName}`}</p>
         </div>
      
        
