@@ -34,10 +34,8 @@ export default function TodoList(props) {
   //Check the current url location
   //Return user to log-in page if not logged-in
   useEffect(() => {
-    console.log(loggedIn)
     if (!loggedIn) {
       navigate('/')
-      console.log(loggedIn)
     }
   }, [location])
 
