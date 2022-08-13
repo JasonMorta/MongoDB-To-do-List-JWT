@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix jwt-to-do-list && npm run build --prefix jwt-to-do-list",
     "start": "concurrently \"npm install && nodemon app.js\" \"npm install --prefix jwt-to-do-list && npm start --prefix jwt-to-do-list\"",
     "build": "react-scripts build"
   },

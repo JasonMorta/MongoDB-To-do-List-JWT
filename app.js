@@ -50,3 +50,12 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
    console.log(`Server is listening on port ${PORT}`);
 });
+
+/* For Heroku Deployment */
+if (process.env.NODE_ENV === 'production') {
+   app.use(express.static(path.join(__dirname, 'jwt-to-do-list/build')));
+   app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname,
+         'jwt-to-do-list', 'build', 'index.html'));
+   });
+}
