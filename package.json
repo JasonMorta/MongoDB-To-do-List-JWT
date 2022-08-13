@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm install && nodemon app.js\" \"npm install --prefix jwt-to-do-list && npm start --prefix jwt-to-do-list\""
+    "start": "concurrently \"npm install && nodemon app.js\" \"npm install --prefix jwt-to-do-list && npm start --prefix jwt-to-do-list\"",
+    "build": "react-scripts build"
   },
   "repository": {
     "type": "git",
