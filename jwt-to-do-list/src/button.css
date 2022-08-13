@@ -1,6 +1,6 @@
 .My-btn-link {
    display: flex;
-   align-items: center;
+   align-items: flex-end;
    align-content: center;
    flex-direction: row;
    justify-content: space-between;

@@ -5,8 +5,8 @@ const Schema={
    userName  : String,
    userPass  : String,
    toDoList  : [String],
-   created   : Date,
+   created   : { type: Date, default: Date.now }
 }
 
-module.exports = MongooseModel = mongoose.model("ToDoLists", Schema)
+module.exports = MongooseModel = mongoose.model("todolist", Schema)
 

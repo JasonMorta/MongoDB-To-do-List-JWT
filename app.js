@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({
 }))
 require('dotenv').config()
 app.use(bodyParser.json())
-const model = require('./model/schema.model'); //require the schema
+const model = require('./model/to-do-schema'); //require the schema
 
 //require routes to endpoints
 require('./routes/logIn.js')(app);

@@ -1,5 +1,5 @@
 //This file will perform all the CRUD operations
-const model = require('../model/schema.model'); //require the schema
+const model = require('../model/to-do-schema'); //require the schema
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 //On LOG-IN
@@ -22,31 +22,31 @@ exports.logIn = (req, res) => {
    const token = jwt.sign(JSON.stringify(payload), process.env.SECRET_KEY, {
       algorithm: 'HS256'
    })
-         console.log("Token created")
-         console.log("Logged In")
-         model.find(({
-            userName: req.body.userName, //Find data by userName
-            userPass: req.body.userPass,
-         }), (err, data) => {
-            if (err) { //If theres a server error/connection problem
-               res.status(500).send({
-                  message: "Some error occurred while retrieving data."
-               });
-            } else {
-               if (req.body.userName && req.body.userPass) { //if userName & psd is found in db=>send DATA to front-end
-                  res.send({
-                     "data": data,
-                     "token": token
-                  })
-                  console.log("Got user")
-               } else {
-                  console.log("User Not Found")
-                  res.send("User Not Found");
-               }
+   console.log("Token created")
+   console.log("Logged In")
+   model.find(({
+      userName: req.body.userName, //Find data by userName
+      userPass: req.body.userPass,
+   }), (err, data) => {
+      if (err) { //If theres a server error/connection problem
+         res.status(500).send({
+            message: "Some error occurred while retrieving data."
+         });
+      } else {
+         if (req.body.userName && req.body.userPass) { //if userName & psd is found in db=>send DATA to front-end
+            res.send({
+               "data": data,
+               "token": token
+            })
+            console.log("Got user")
+         } else {
+            console.log("User Not Found")
+            res.send("User Not Found");
+         }
 
-            }
+      }
 
-         })
+   })
 };
 
 //POST= create the document on SIGN-UP
@@ -75,9 +75,6 @@ exports.createUser = async (req, res) => {
       console.log("New user Added");
 
    }
-
-
-
 
 }
 
